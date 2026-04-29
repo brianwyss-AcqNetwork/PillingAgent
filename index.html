@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will Pilling — Acquisition Network Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0B1F3A;
+    --navy-mid: #1A3458;
+    --navy-light: #2A4A70;
+    --gold: #C9973A;
+    --gold-light: #F0C97A;
+    --gold-pale: #FDF3DC;
+    --surface: #F7F4EE;
+    --white: #FFFFFF;
+    --border: rgba(11,31,58,0.10);
+    --border-strong: rgba(11,31,58,0.16);
+    --text: #0B1F3A;
+    --muted: #5A6E84;
+    --green: #1A5C38;
+    --green-bg: #E4F3EC;
+    --red: #8B1A1A;
+    --red-bg: #FBEAEA;
+    --amber: #7A4A0A;
+    --amber-bg: #FDF0DC;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Syne', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy); border-bottom: 1px solid rgba(201,151,58,0.18);
+    padding: 0 32px; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-mark {
+    width: 30px; height: 30px; border-radius: 6px;
+    background: var(--gold); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em;
+  }
+  .nav-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .nav-name span { color: var(--gold-light); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-status { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 6px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #3EBD7A; animation: pulse 2.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .nav-link { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); text-decoration: none; padding: 4px 9px; border-radius: 4px; transition: all 0.14s; }
+  .nav-link:hover { color: var(--gold-light); background: rgba(201,151,58,0.1); }
+
+  /* HERO */
+  .hero { background: var(--navy); padding: 60px 32px 52px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-55deg, transparent, transparent 44px, rgba(201,151,58,0.025) 44px, rgba(201,151,58,0.025) 45px); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; right: -80px; top: -80px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(201,151,58,0.07) 0%, transparent 68%); pointer-events: none; }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .eyebrow-tag { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; background: rgba(201,151,58,0.13); color: var(--gold-light); border: 1px solid rgba(201,151,58,0.22); }
+  .eyebrow-rule { width: 32px; height: 1px; background: rgba(201,151,58,0.25); }
+  .hero-h1 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .hero-h1 em { font-style: normal; color: var(--gold-light); }
+  .hero-desc { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.75; max-width: 580px; margin-bottom: 32px; }
+  .hero-kpis { display: flex; flex-wrap: wrap; gap: 0; }
+  .kpi { padding: 13px 22px; border: 1px solid rgba(201,151,58,0.13); border-right: none; background: rgba(255,255,255,0.025); }
+  .kpi:first-child { border-radius: 8px 0 0 8px; }
+  .kpi:last-child { border-right: 1px solid rgba(201,151,58,0.13); border-radius: 0 8px 8px 0; }
+  .kpi-val { font-size: 19px; font-weight: 700; color: var(--gold-light); font-family: 'DM Mono', monospace; line-height: 1; }
+  .kpi-label { font-size: 9px; color: rgba(255,255,255,0.32); margin-top: 3px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* BUY BOX STRIP */
+  .bb-strip { background: var(--gold-pale); border-top: 3px solid var(--gold); border-bottom: 1px solid rgba(201,151,58,0.18); padding: 13px 32px; }
+  .bb-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .bb-lbl { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); flex-shrink: 0; }
+  .bb-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bb-chip { font-size: 11px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; background: var(--white); border: 1px solid rgba(201,151,58,0.26); color: var(--navy-mid); }
+  .bb-chip strong { color: var(--navy); }
+  .bb-no { font-size: 11px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; background: var(--red-bg); border: 1px solid rgba(139,26,26,0.14); color: var(--red); }
+
+  /* MAIN */
+  .main { max-width: 900px; margin: 0 auto; padding: 44px 32px 80px; }
+
+  /* SECTION HEADER */
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--navy); white-space: nowrap; }
+  .sec-rule { flex: 1; height: 1px; background: var(--border-strong); }
+
+  /* FEATURED CARD */
+  .featured-card {
+    background: var(--navy); border-radius: 14px; padding: 28px 28px 24px;
+    margin-bottom: 40px; position: relative; overflow: hidden;
+    display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
+    text-decoration: none; transition: box-shadow 0.18s;
+  }
+  .featured-card:hover { box-shadow: 0 6px 32px rgba(11,31,58,0.22); }
+  .featured-card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-55deg, transparent, transparent 44px, rgba(201,151,58,0.03) 44px, rgba(201,151,58,0.03) 45px); pointer-events: none; }
+  .featured-card::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,151,58,0.08) 0%, transparent 70%); pointer-events: none; }
+  .fc-left { position: relative; z-index: 1; }
+  .fc-badge { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 4px; background: rgba(201,151,58,0.15); color: var(--gold-light); border: 1px solid rgba(201,151,58,0.25); display: inline-block; margin-bottom: 10px; }
+  .fc-title { font-size: 22px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .fc-title em { font-style: normal; color: var(--gold-light); }
+  .fc-desc { font-size: 13px; color: rgba(255,255,255,0.48); line-height: 1.65; max-width: 480px; margin-bottom: 18px; }
+  .fc-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fc-tag { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+  .fc-right { position: relative; z-index: 1; }
+  .fc-cta { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; padding: 12px 22px; border-radius: 8px; background: var(--gold); color: var(--navy); text-decoration: none; display: block; text-align: center; white-space: nowrap; transition: background 0.15s, transform 0.12s; letter-spacing: 0.01em; }
+  .fc-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* TOOL GRID */
+  .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 40px; }
+  .tool-card { background: var(--white); border: 1px solid var(--border-strong); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit; display: flex; align-items: flex-start; gap: 14px; transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s; }
+  .tool-card:hover { border-color: var(--gold); box-shadow: 0 3px 16px rgba(201,151,58,0.08); transform: translateY(-1px); }
+  .tool-card.disabled { opacity: 0.48; cursor: default; pointer-events: none; }
+  .tool-icon { width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .tc-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+  .tc-desc { font-size: 11px; color: var(--muted); line-height: 1.5; font-family: 'DM Mono', monospace; }
+  .tc-status { font-size: 9px; font-family: 'DM Mono', monospace; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; display: inline-block; padding: 2px 7px; border-radius: 3px; }
+  .status-live { background: var(--green-bg); color: var(--green); }
+  .status-soon { background: var(--amber-bg); color: var(--amber); }
+
+  /* INFO GRID */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 40px; }
+  .info-card { background: var(--white); border: 1px solid var(--border-strong); border-radius: 10px; padding: 16px 18px; }
+  .info-lbl { font-size: 9px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 5px; }
+  .info-val { font-size: 15px; font-weight: 700; color: var(--navy); font-family: 'DM Mono', monospace; }
+  .info-val.gold { color: var(--gold); }
+  .info-sub { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+
+  /* SOURCES GRID */
+  .sources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 40px; }
+  .source-chip { background: var(--white); border: 1px solid var(--border-strong); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 3px; transition: border-color 0.14s; }
+  .source-chip:hover { border-color: var(--gold); }
+  .sc-abbr { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--gold); letter-spacing: 0.02em; }
+  .sc-name { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* FOOTER */
+  footer { background: var(--navy); padding: 28px 32px; border-top: 1px solid rgba(201,151,58,0.14); }
+  .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+  .footer-brand { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.45); }
+  .footer-brand em { font-style: normal; color: var(--gold-light); }
+  .footer-brand p { font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.2); margin-top: 4px; }
+  .footer-links { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
+  .footer-links a { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.14s; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-copy { width: 100%; font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.15); padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+  @media (max-width: 600px) {
+    nav, .hero, .bb-strip, .main, footer { padding-left: 16px; padding-right: 16px; }
+    .featured-card { grid-template-columns: 1fr; }
+    .nav-link { display: none; }
+    .footer-links { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-mark">AN</div>
+    <div class="nav-name">Acquisition <span>Network</span></div>
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="#tools">Tools</a>
+    <a class="nav-link" href="#sources">Sources</a>
+    <div class="nav-status"><div class="live-dot"></div>Agent Live</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-tag">Will Pilling · Acquisition Network</span>
+      <div class="eyebrow-rule"></div>
+    </div>
+    <h1 class="hero-h1">Deal Pipeline<br><em>Pennsylvania &amp; Utah</em></h1>
+    <p class="hero-desc">Your personal acquisition portal — powered by AI deal search, real-time web scanning, and institutional-grade scoring across 13 business-for-sale platforms.</p>
+    <div class="hero-kpis">
+      <div class="kpi"><div class="kpi-val">$150K–$500K</div><div class="kpi-label">SDE Target</div></div>
+      <div class="kpi"><div class="kpi-val">$500K–$1.2M</div><div class="kpi-label">Price Range</div></div>
+      <div class="kpi"><div class="kpi-val">PA · UT</div><div class="kpi-label">Territory</div></div>
+      <div class="kpi"><div class="kpi-val">13</div><div class="kpi-label">Platforms</div></div>
+      <div class="kpi"><div class="kpi-val">A–D</div><div class="kpi-label">Grading</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="bb-strip">
+  <div class="bb-inner">
+    <div class="bb-lbl">Buy Box</div>
+    <div class="bb-chips">
+      <div class="bb-chip"><strong>SDE:</strong> $150K–$500K</div>
+      <div class="bb-chip"><strong>Price:</strong> $500K–$1.2M</div>
+      <div class="bb-chip"><strong>States:</strong> Pennsylvania · Utah</div>
+      <div class="bb-chip"><strong>Sectors:</strong> Home Services · Auto Body · Auto Repair · Automotive Aftermarket</div>
+      <div class="bb-no">✕ No Online / eCommerce</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FEATURED -->
+  <div class="sec-head">
+    <div class="sec-title">Primary Tool</div>
+    <div class="sec-rule"></div>
+  </div>
+
+  <a class="featured-card" href="will-pilling-deal-scout.html">
+    <div class="fc-left">
+      <div class="fc-badge">AI-Powered · Live Web Search · Claude API</div>
+      <div class="fc-title">Deal Scout <em>Agent</em></div>
+      <div class="fc-desc">Scans BizBuySell, Sunbelt, BizBen, and 10 more platforms in real time using Claude AI and web search. Every listing auto-graded A–D against your exact buy box. Includes sector toggles, state filter, result count selector, and CSV export.</div>
+      <div class="fc-meta">
+        <div class="fc-tag">Live Claude API</div>
+        <div class="fc-tag">Web Search</div>
+        <div class="fc-tag">A–D Grading</div>
+        <div class="fc-tag">Sector Toggles</div>
+        <div class="fc-tag">CSV Export</div>
+        <div class="fc-tag">30-day window</div>
+      </div>
+    </div>
+    <div class="fc-right">
+      <div class="fc-cta">Open Agent →</div>
+    </div>
+  </a>
+
+  <!-- TOOLS -->
+  <div class="sec-head" id="tools">
+    <div class="sec-title">Deal Tools</div>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="tool-grid">
+    <a class="tool-card" href="will-pilling-deal-scout.html">
+      <div class="tool-icon">🔍</div>
+      <div>
+        <div class="tc-name">AI Deal Scout</div>
+        <div class="tc-desc">Live multi-platform search with A–D buy box scoring and CSV export</div>
+        <span class="tc-status status-live">Live</span>
+      </div>
+    </a>
+    <a class="tool-card disabled" href="#">
+      <div class="tool-icon">📋</div>
+      <div>
+        <div class="tc-name">SDE Reconstructor</div>
+        <div class="tc-desc">Upload a CIM or P&L and get full add-back analysis</div>
+        <span class="tc-status status-soon">Coming Soon</span>
+      </div>
+    </a>
+    <a class="tool-card disabled" href="#">
+      <div class="tool-icon">📝</div>
+      <div>
+        <div class="tc-name">LOI Generator</div>
+        <div class="tc-desc">Auto-draft letters of intent from deal parameters</div>
+        <span class="tc-status status-soon">Coming Soon</span>
+      </div>
+    </a>
+    <a class="tool-card disabled" href="#">
+      <div class="tool-icon">🏦</div>
+      <div>
+        <div class="tc-name">Deal Memo Builder</div>
+        <div class="tc-desc">Institutional acquisition analysis in AN format</div>
+        <span class="tc-status status-soon">Coming Soon</span>
+      </div>
+    </a>
+    <a class="tool-card disabled" href="#">
+      <div class="tool-icon">📊</div>
+      <div>
+        <div class="tc-name">Pipeline Tracker</div>
+        <div class="tc-desc">Track active deals, LOIs in progress, and deal stages</div>
+        <span class="tc-status status-soon">Coming Soon</span>
+      </div>
+    </a>
+    <a class="tool-card disabled" href="#">
+      <div class="tool-icon">🏛️</div>
+      <div>
+        <div class="tc-name">SBA Lender Matrix</div>
+        <div class="tc-desc">Preferred lenders, terms, and contact reference</div>
+        <span class="tc-status status-soon">Coming Soon</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- BUY BOX REFERENCE -->
+  <div class="sec-head">
+    <div class="sec-title">Buy Box Reference</div>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-lbl">SDE Floor</div>
+      <div class="info-val gold">$150,000</div>
+      <div class="info-sub">Minimum seller's discretionary earnings</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">SDE Ceiling</div>
+      <div class="info-val gold">$500,000</div>
+      <div class="info-sub">Maximum seller's discretionary earnings</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">Price Floor</div>
+      <div class="info-val">$500,000</div>
+      <div class="info-sub">Minimum purchase price</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">Price Ceiling</div>
+      <div class="info-val">$1,200,000</div>
+      <div class="info-sub">Maximum purchase price</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">Territory</div>
+      <div class="info-val">PA · UT</div>
+      <div class="info-sub">Pennsylvania and Utah only</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">Typical Multiple</div>
+      <div class="info-val">2.5–3.5×</div>
+      <div class="info-sub">SDE multiple for target sectors</div>
+    </div>
+    <div class="info-card">
+      <div class="info-lbl">Target Sectors</div>
+      <div class="info-val" style="font-size:11px;line-height:1.6;">Home Services<br>Auto Body · Auto Repair<br>Automotive Aftermarket</div>
+    </div>
+    <div class="info-card" style="border-left: 2px solid var(--red);">
+      <div class="info-lbl">Hard Exclude</div>
+      <div class="info-val" style="color:var(--red);font-size:12px;">Online / eCommerce</div>
+      <div class="info-sub">Brick-and-mortar only — no digital businesses</div>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sec-head" id="sources">
+    <div class="sec-title">Search Platforms</div>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="sources-grid">
+    <div class="source-chip"><div class="sc-abbr">BBS</div><div class="sc-name">BizBuySell</div></div>
+    <div class="source-chip"><div class="sc-abbr">BBN</div><div class="sc-name">BizBen</div></div>
+    <div class="source-chip"><div class="sc-abbr">MF</div><div class="sc-name">MergerFile</div></div>
+    <div class="source-chip"><div class="sc-abbr">BFS</div><div class="sc-name">BusinessesForsale</div></div>
+    <div class="source-chip"><div class="sc-abbr">DS</div><div class="sc-name">DealStream</div></div>
+    <div class="source-chip"><div class="sc-abbr">SBN</div><div class="sc-name">Sunbelt Network</div></div>
+    <div class="source-chip"><div class="sc-abbr">LN</div><div class="sc-name">LoopNet</div></div>
+    <div class="source-chip"><div class="sc-abbr">BBR</div><div class="sc-name">BusinessBroker.net</div></div>
+    <div class="source-chip"><div class="sc-abbr">BM</div><div class="sc-name">BusinessMart</div></div>
+    <div class="source-chip"><div class="sc-abbr">TW</div><div class="sc-name">T-World</div></div>
+    <div class="source-chip"><div class="sc-abbr">EX</div><div class="sc-name">Exchange Mkt</div></div>
+    <div class="source-chip"><div class="sc-abbr">VBB</div><div class="sc-name">VestedBB</div></div>
+    <div class="source-chip"><div class="sc-abbr">QL</div><div class="sc-name">QuietLight</div></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      Acquisition <em>Network</em> · Will Pilling
+      <p>Operated by Avila Phoenix Ventures, LLC · Rhema Management Group</p>
+    </div>
+    <div class="footer-links">
+      <a href="will-pilling-deal-scout.html">Deal Scout Agent</a>
+      <a href="mailto:brian@avilaphoenixventures.com">Contact Brian Wyss</a>
+    </div>
+    <div class="footer-copy">© 2026 Avila Phoenix Ventures, LLC · Private Use Only · AI-generated deal summaries are for screening purposes only — verify all listings on source platforms before proceeding. Not financial or legal advice.</div>
+  </div>
+</footer>
+
+</body>
+</html>
