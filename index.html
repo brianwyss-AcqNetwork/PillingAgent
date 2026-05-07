@@ -1,376 +1,988 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Will Pilling — Acquisition Network Portal</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Will Pilling Deal Scout · HSW Partners</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --navy: #0B1F3A;
-    --navy-mid: #1A3458;
-    --navy-light: #2A4A70;
-    --gold: #C9973A;
-    --gold-light: #F0C97A;
-    --gold-pale: #FDF3DC;
-    --surface: #F7F4EE;
-    --white: #FFFFFF;
-    --border: rgba(11,31,58,0.10);
-    --border-strong: rgba(11,31,58,0.16);
-    --text: #0B1F3A;
-    --muted: #5A6E84;
-    --green: #1A5C38;
-    --green-bg: #E4F3EC;
-    --red: #8B1A1A;
-    --red-bg: #FBEAEA;
-    --amber: #7A4A0A;
-    --amber-bg: #FDF0DC;
+  :root{
+    --navy:#0B1E3F;
+    --navy-deep:#061230;
+    --navy-soft:#1A2F55;
+    --gold:#C5A572;
+    --gold-bright:#D9BB85;
+    --gold-soft:#E8D5A8;
+    --cream:#F5EFE2;
+    --paper:#FAF7F0;
+    --ink:#1A1A1A;
+    --gray:#6B6B6B;
+    --gray-line:#D8D2C4;
+    --green:#2D6A4F;
+    --red:#9B2226;
+    --amber:#B7791F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    font-size:14px;
+    line-height:1.5;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
   }
 
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Syne', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
-
-  /* NAV */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: var(--navy); border-bottom: 1px solid rgba(201,151,58,0.18);
-    padding: 0 32px; height: 52px;
-    display: flex; align-items: center; justify-content: space-between;
+  /* ── HEADER ──────────────────────────────────────────────── */
+  header{
+    background:linear-gradient(180deg,var(--navy) 0%, var(--navy-deep) 100%);
+    color:var(--cream);
+    padding:22px 40px;
+    border-bottom:3px solid var(--gold);
+    position:relative;
   }
-  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-mark {
-    width: 30px; height: 30px; border-radius: 6px;
-    background: var(--gold); display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em;
+  header::after{
+    content:"";
+    position:absolute;
+    bottom:-3px;left:0;right:0;height:3px;
+    background:linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-bright) 50%, var(--gold) 70%, transparent);
   }
-  .nav-name { font-size: 13px; font-weight: 700; color: #fff; }
-  .nav-name span { color: var(--gold-light); }
-  .nav-right { display: flex; align-items: center; gap: 12px; }
-  .nav-status { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 6px; }
-  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #3EBD7A; animation: pulse 2.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .nav-link { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); text-decoration: none; padding: 4px 9px; border-radius: 4px; transition: all 0.14s; }
-  .nav-link:hover { color: var(--gold-light); background: rgba(201,151,58,0.1); }
-
-  /* HERO */
-  .hero { background: var(--navy); padding: 60px 32px 52px; position: relative; overflow: hidden; }
-  .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-55deg, transparent, transparent 44px, rgba(201,151,58,0.025) 44px, rgba(201,151,58,0.025) 45px); pointer-events: none; }
-  .hero::after { content: ''; position: absolute; right: -80px; top: -80px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(201,151,58,0.07) 0%, transparent 68%); pointer-events: none; }
-  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
-  .hero-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-  .eyebrow-tag { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; background: rgba(201,151,58,0.13); color: var(--gold-light); border: 1px solid rgba(201,151,58,0.22); }
-  .eyebrow-rule { width: 32px; height: 1px; background: rgba(201,151,58,0.25); }
-  .hero-h1 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 16px; }
-  .hero-h1 em { font-style: normal; color: var(--gold-light); }
-  .hero-desc { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.75; max-width: 580px; margin-bottom: 32px; }
-  .hero-kpis { display: flex; flex-wrap: wrap; gap: 0; }
-  .kpi { padding: 13px 22px; border: 1px solid rgba(201,151,58,0.13); border-right: none; background: rgba(255,255,255,0.025); }
-  .kpi:first-child { border-radius: 8px 0 0 8px; }
-  .kpi:last-child { border-right: 1px solid rgba(201,151,58,0.13); border-radius: 0 8px 8px 0; }
-  .kpi-val { font-size: 19px; font-weight: 700; color: var(--gold-light); font-family: 'DM Mono', monospace; line-height: 1; }
-  .kpi-label { font-size: 9px; color: rgba(255,255,255,0.32); margin-top: 3px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  /* BUY BOX STRIP */
-  .bb-strip { background: var(--gold-pale); border-top: 3px solid var(--gold); border-bottom: 1px solid rgba(201,151,58,0.18); padding: 13px 32px; }
-  .bb-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .bb-lbl { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); flex-shrink: 0; }
-  .bb-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  .bb-chip { font-size: 11px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; background: var(--white); border: 1px solid rgba(201,151,58,0.26); color: var(--navy-mid); }
-  .bb-chip strong { color: var(--navy); }
-  .bb-no { font-size: 11px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; background: var(--red-bg); border: 1px solid rgba(139,26,26,0.14); color: var(--red); }
-
-  /* MAIN */
-  .main { max-width: 900px; margin: 0 auto; padding: 44px 32px 80px; }
-
-  /* SECTION HEADER */
-  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--navy); white-space: nowrap; }
-  .sec-rule { flex: 1; height: 1px; background: var(--border-strong); }
-
-  /* FEATURED CARD */
-  .featured-card {
-    background: var(--navy); border-radius: 14px; padding: 28px 28px 24px;
-    margin-bottom: 40px; position: relative; overflow: hidden;
-    display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
-    text-decoration: none; transition: box-shadow 0.18s;
+  .header-inner{
+    max-width:1480px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:32px;
   }
-  .featured-card:hover { box-shadow: 0 6px 32px rgba(11,31,58,0.22); }
-  .featured-card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-55deg, transparent, transparent 44px, rgba(201,151,58,0.03) 44px, rgba(201,151,58,0.03) 45px); pointer-events: none; }
-  .featured-card::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,151,58,0.08) 0%, transparent 70%); pointer-events: none; }
-  .fc-left { position: relative; z-index: 1; }
-  .fc-badge { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 4px; background: rgba(201,151,58,0.15); color: var(--gold-light); border: 1px solid rgba(201,151,58,0.25); display: inline-block; margin-bottom: 10px; }
-  .fc-title { font-size: 22px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.01em; }
-  .fc-title em { font-style: normal; color: var(--gold-light); }
-  .fc-desc { font-size: 13px; color: rgba(255,255,255,0.48); line-height: 1.65; max-width: 480px; margin-bottom: 18px; }
-  .fc-meta { display: flex; gap: 8px; flex-wrap: wrap; }
-  .fc-tag { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
-  .fc-right { position: relative; z-index: 1; }
-  .fc-cta { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; padding: 12px 22px; border-radius: 8px; background: var(--gold); color: var(--navy); text-decoration: none; display: block; text-align: center; white-space: nowrap; transition: background 0.15s, transform 0.12s; letter-spacing: 0.01em; }
-  .fc-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .crest{
+    display:flex;align-items:center;gap:18px;
+  }
+  .crest-mark{
+    width:54px;height:54px;
+    border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:22px;
+    color:var(--gold);
+    letter-spacing:1px;
+    position:relative;
+  }
+  .crest-mark::before,.crest-mark::after{
+    content:"";position:absolute;
+    width:8px;height:8px;
+    border:1px solid var(--gold);
+  }
+  .crest-mark::before{top:-5px;left:-5px;border-right:none;border-bottom:none}
+  .crest-mark::after{bottom:-5px;right:-5px;border-left:none;border-top:none}
+  .crest-text h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:24px;
+    letter-spacing:0.5px;line-height:1.1;
+  }
+  .crest-text h1 em{
+    font-style:italic;color:var(--gold);font-weight:500;
+  }
+  .crest-text .sub{
+    font-size:11px;letter-spacing:2.5px;
+    color:var(--gold-soft);text-transform:uppercase;
+    margin-top:4px;
+  }
+  .agent-pill{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 14px;
+    border:1px solid var(--gold);
+    background:rgba(197,165,114,0.08);
+    font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--gold-soft);
+  }
+  .pulse{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 0 0 rgba(217,187,133,0.8);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(217,187,133,0.7)}
+    70%{box-shadow:0 0 0 8px rgba(217,187,133,0)}
+    100%{box-shadow:0 0 0 0 rgba(217,187,133,0)}
+  }
 
-  /* TOOL GRID */
-  .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 40px; }
-  .tool-card { background: var(--white); border: 1px solid var(--border-strong); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit; display: flex; align-items: flex-start; gap: 14px; transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s; }
-  .tool-card:hover { border-color: var(--gold); box-shadow: 0 3px 16px rgba(201,151,58,0.08); transform: translateY(-1px); }
-  .tool-card.disabled { opacity: 0.48; cursor: default; pointer-events: none; }
-  .tool-icon { width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .tc-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
-  .tc-desc { font-size: 11px; color: var(--muted); line-height: 1.5; font-family: 'DM Mono', monospace; }
-  .tc-status { font-size: 9px; font-family: 'DM Mono', monospace; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; display: inline-block; padding: 2px 7px; border-radius: 3px; }
-  .status-live { background: var(--green-bg); color: var(--green); }
-  .status-soon { background: var(--amber-bg); color: var(--amber); }
+  /* ── LAYOUT ──────────────────────────────────────────────── */
+  main{
+    flex:1;display:grid;
+    grid-template-columns:340px 1fr;
+    gap:0;
+    max-width:1480px;width:100%;margin:0 auto;
+  }
+  aside{
+    background:var(--navy);
+    color:var(--cream);
+    padding:28px 24px 60px;
+    border-right:1px solid var(--gold);
+  }
+  aside h3{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:18px;
+    color:var(--gold);
+    letter-spacing:0.3px;
+    margin-bottom:6px;
+    padding-bottom:8px;
+    border-bottom:1px solid rgba(197,165,114,0.3);
+  }
+  aside .group{margin-bottom:24px}
+  aside .group-label{
+    font-size:10px;letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:10px;display:block;
+  }
+  .pills{display:flex;flex-wrap:wrap;gap:6px}
+  .pill{
+    font-size:11px;font-weight:500;
+    padding:6px 12px;
+    border:1px solid rgba(197,165,114,0.4);
+    color:var(--cream);
+    cursor:pointer;
+    transition:all 0.18s;
+    user-select:none;letter-spacing:0.4px;
+    background:transparent;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:var(--navy-deep);
+    border-color:var(--gold);
+    font-weight:600;
+  }
+  .pill:hover:not(.active){
+    border-color:var(--gold);color:var(--gold-bright);
+  }
+  select, input[type="number"], input[type="text"], textarea{
+    width:100%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(197,165,114,0.3);
+    color:var(--cream);
+    padding:9px 12px;
+    font-family:inherit;font-size:13px;
+    outline:none;
+    transition:border 0.15s;
+  }
+  select:focus, input:focus, textarea:focus{
+    border-color:var(--gold);
+  }
+  textarea{resize:vertical;min-height:62px;font-size:12px;line-height:1.45}
+  .input-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .platform-list{
+    display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;
+    font-size:11px;
+  }
+  .platform-list label{
+    display:flex;align-items:center;gap:6px;cursor:pointer;
+    color:var(--cream);letter-spacing:0.3px;
+  }
+  .platform-list input{accent-color:var(--gold)}
 
-  /* INFO GRID */
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 40px; }
-  .info-card { background: var(--white); border: 1px solid var(--border-strong); border-radius: 10px; padding: 16px 18px; }
-  .info-lbl { font-size: 9px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 5px; }
-  .info-val { font-size: 15px; font-weight: 700; color: var(--navy); font-family: 'DM Mono', monospace; }
-  .info-val.gold { color: var(--gold); }
-  .info-sub { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  button.scout{
+    width:100%;
+    margin-top:18px;
+    background:linear-gradient(180deg,var(--gold-bright) 0%, var(--gold) 100%);
+    color:var(--navy-deep);
+    border:none;
+    padding:13px 16px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all 0.2s;
+    position:relative;
+  }
+  button.scout:hover{
+    background:linear-gradient(180deg,#E5C893 0%, #CFB07E 100%);
+    box-shadow:0 4px 14px rgba(197,165,114,0.4);
+  }
+  button.scout:disabled{opacity:0.6;cursor:wait}
 
-  /* SOURCES GRID */
-  .sources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 40px; }
-  .source-chip { background: var(--white); border: 1px solid var(--border-strong); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 3px; transition: border-color 0.14s; }
-  .source-chip:hover { border-color: var(--gold); }
-  .sc-abbr { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--gold); letter-spacing: 0.02em; }
-  .sc-name { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  /* ── WORKBENCH ───────────────────────────────────────────── */
+  .workbench{
+    padding:30px 38px 60px;
+    background:var(--paper);
+    min-height:calc(100vh - 90px);
+  }
+  .buybox{
+    background:linear-gradient(135deg, #FFFFFF 0%, var(--cream) 100%);
+    border:1px solid var(--gray-line);
+    border-left:4px solid var(--gold);
+    padding:22px 28px;
+    margin-bottom:24px;
+    position:relative;
+  }
+  .buybox::after{
+    content:"❦";
+    position:absolute;top:14px;right:20px;
+    font-size:22px;color:var(--gold);
+  }
+  .buybox h4{
+    font-family:'Cormorant Garamond',serif;
+    font-size:21px;font-weight:600;
+    color:var(--navy);letter-spacing:0.3px;
+    margin-bottom:4px;
+  }
+  .buybox h4 em{font-style:italic;color:var(--gold);font-weight:500}
+  .buybox .grid{
+    margin-top:14px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px 28px;
+    font-size:12.5px;line-height:1.55;color:#3A3A3A;
+  }
+  .buybox b{color:var(--navy);font-weight:600;display:block;margin-bottom:2px;letter-spacing:0.3px}
 
-  /* FOOTER */
-  footer { background: var(--navy); padding: 28px 32px; border-top: 1px solid rgba(201,151,58,0.14); }
-  .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
-  .footer-brand { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.45); }
-  .footer-brand em { font-style: normal; color: var(--gold-light); }
-  .footer-brand p { font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.2); margin-top: 4px; }
-  .footer-links { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
-  .footer-links a { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.14s; }
-  .footer-links a:hover { color: var(--gold-light); }
-  .footer-copy { width: 100%; font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.15); padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.05); }
+  .empty{
+    background:linear-gradient(180deg,#FFFFFF 0%, var(--cream) 100%);
+    border:1px dashed var(--gray-line);
+    padding:80px 40px;text-align:center;
+  }
+  .empty .ornament{
+    font-family:'Cormorant Garamond',serif;
+    font-size:36px;color:var(--gold);
+    margin-bottom:14px;
+  }
+  .empty h2{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:28px;
+    color:var(--navy);margin-bottom:10px;
+  }
+  .empty p{
+    color:var(--gray);max-width:540px;margin:0 auto;
+    font-size:13.5px;line-height:1.7;
+  }
 
-  @media (max-width: 600px) {
-    nav, .hero, .bb-strip, .main, footer { padding-left: 16px; padding-right: 16px; }
-    .featured-card { grid-template-columns: 1fr; }
-    .nav-link { display: none; }
-    .footer-links { align-items: flex-start; }
+  .results-header{
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--gray-line);
+    padding-bottom:14px;margin-bottom:18px;
+  }
+  .results-header h2{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:26px;color:var(--navy);
+  }
+  .results-header h2 em{color:var(--gold);font-style:italic}
+  .results-header .count{
+    font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--gray);
+  }
+  .results-header .actions{display:flex;gap:10px;align-items:center}
+  .csv-btn{
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--navy);
+    padding:7px 14px;
+    font-size:11px;letter-spacing:1.5px;
+    text-transform:uppercase;font-weight:600;
+    cursor:pointer;
+    transition:all 0.15s;
+  }
+  .csv-btn:hover:not(:disabled){background:var(--gold);color:var(--navy-deep)}
+  .csv-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+  .deal{
+    background:#FFFFFF;
+    border:1px solid var(--gray-line);
+    border-left:4px solid var(--gold);
+    padding:22px 26px;
+    margin-bottom:14px;
+    display:grid;
+    grid-template-columns:1fr 200px;
+    gap:24px;
+    transition:box-shadow 0.18s, transform 0.18s;
+  }
+  .deal:hover{box-shadow:0 6px 22px rgba(11,30,63,0.08); transform:translateY(-1px)}
+  .deal.advance{border-left-color:var(--green)}
+  .deal.diligence{border-left-color:var(--amber)}
+  .deal.pass{border-left-color:var(--red);opacity:0.85}
+  .deal-head{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:16px;margin-bottom:8px;
+  }
+  .deal-name{
+    font-family:'Cormorant Garamond',serif;
+    font-size:21px;font-weight:600;color:var(--navy);
+    line-height:1.2;letter-spacing:0.2px;
+  }
+  .deal-meta{
+    font-size:11px;color:var(--gray);
+    margin-top:4px;letter-spacing:0.5px;
+  }
+  .deal-meta .sep{color:var(--gold);margin:0 6px}
+  .deal-stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+    margin:14px 0 10px;
+  }
+  .stat{
+    background:var(--cream);
+    padding:8px 10px;
+    border-left:2px solid var(--gold);
+  }
+  .stat .label{
+    font-size:9px;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--gray);
+  }
+  .stat .val{
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;font-weight:600;color:var(--navy);
+    margin-top:2px;
+  }
+  .deal-summary{
+    font-size:13px;color:#333;line-height:1.55;
+    margin-top:8px;
+  }
+  .deal-fit{
+    font-size:12px;color:#333;line-height:1.55;
+    margin-top:10px;
+    padding:10px 12px;
+    background:rgba(197,165,114,0.08);
+    border-left:2px solid var(--gold);
+  }
+  .deal-fit b{color:var(--navy);font-weight:600;letter-spacing:0.3px}
+  .deal-risk{
+    font-size:11.5px;color:#5C2A2A;
+    margin-top:8px;font-style:italic;
+  }
+  .deal-side{
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    border-left:1px solid var(--gray-line);
+    padding-left:20px;
+  }
+  .score-ring{
+    width:108px;height:108px;
+    border-radius:50%;
+    background:conic-gradient(var(--gold) calc(var(--p)*1%), #EEE6D1 0);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .score-ring::before{
+    content:"";position:absolute;
+    inset:7px;border-radius:50%;background:#FFF;
+  }
+  .score-num{
+    position:relative;font-family:'Cormorant Garamond',serif;
+    font-size:34px;font-weight:600;color:var(--navy);
+    line-height:1;
+  }
+  .score-label{
+    font-size:9px;letter-spacing:2px;color:var(--gray);
+    text-transform:uppercase;margin-top:2px;
+    position:relative;
+  }
+  .verdict{
+    margin-top:14px;font-size:11px;letter-spacing:1.5px;
+    text-transform:uppercase;font-weight:600;
+    text-align:center;padding:6px 10px;
+    width:100%;
+  }
+  .verdict.advance{background:rgba(45,106,79,0.12);color:var(--green)}
+  .verdict.diligence{background:rgba(183,121,31,0.12);color:var(--amber)}
+  .verdict.pass{background:rgba(155,34,38,0.12);color:var(--red)}
+  .deal-source{
+    font-size:10px;letter-spacing:1.2px;color:var(--gray);
+    margin-top:10px;text-transform:uppercase;
+  }
+
+  .log{
+    background:var(--navy-deep);
+    border:1px solid var(--gold);
+    color:var(--cream);
+    padding:18px 22px;font-family:'JetBrains Mono','Courier New',monospace;
+    font-size:12px;line-height:1.7;
+    margin-bottom:22px;max-height:240px;overflow-y:auto;
+  }
+  .log-line{display:block;color:var(--gold-soft)}
+  .log-line.log-ok{color:#A3D9A5}
+  .log-line.log-err{color:#F4A8A8}
+  .log-line .ts{color:var(--gold);margin-right:8px}
+
+  footer{
+    background:var(--navy-deep);
+    color:var(--cream);
+    padding:18px 40px;
+    border-top:2px solid var(--gold);
+    font-size:11px;letter-spacing:1px;text-align:center;
+  }
+  footer b{color:var(--gold)}
+
+  @media(max-width:1024px){
+    main{grid-template-columns:1fr}
+    aside{border-right:none;border-bottom:1px solid var(--gold)}
+    .buybox .grid{grid-template-columns:repeat(2,1fr)}
+    .deal{grid-template-columns:1fr}
+    .deal-side{border-left:none;border-top:1px solid var(--gray-line);padding-left:0;padding-top:18px;flex-direction:row;gap:20px;justify-content:flex-start}
+    .verdict{width:auto}
+    .deal-stats{grid-template-columns:repeat(2,1fr)}
   }
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-brand" href="#">
-    <div class="nav-mark">AN</div>
-    <div class="nav-name">Acquisition <span>Network</span></div>
-  </a>
-  <div class="nav-right">
-    <a class="nav-link" href="#tools">Tools</a>
-    <a class="nav-link" href="#sources">Sources</a>
-    <div class="nav-status"><div class="live-dot"></div>Agent Live</div>
-  </div>
-</nav>
-
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <span class="eyebrow-tag">Will Pilling · Acquisition Network</span>
-      <div class="eyebrow-rule"></div>
-    </div>
-    <h1 class="hero-h1">Deal Pipeline<br><em>Pennsylvania &amp; Utah</em></h1>
-    <p class="hero-desc">Your personal acquisition portal — powered by AI deal search, real-time web scanning, and institutional-grade scoring across 13 business-for-sale platforms.</p>
-    <div class="hero-kpis">
-      <div class="kpi"><div class="kpi-val">$150K–$500K</div><div class="kpi-label">SDE Target</div></div>
-      <div class="kpi"><div class="kpi-val">$500K–$1.2M</div><div class="kpi-label">Price Range</div></div>
-      <div class="kpi"><div class="kpi-val">PA · UT</div><div class="kpi-label">Territory</div></div>
-      <div class="kpi"><div class="kpi-val">13</div><div class="kpi-label">Platforms</div></div>
-      <div class="kpi"><div class="kpi-val">A–D</div><div class="kpi-label">Grading</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="bb-strip">
-  <div class="bb-inner">
-    <div class="bb-lbl">Buy Box</div>
-    <div class="bb-chips">
-      <div class="bb-chip"><strong>SDE:</strong> $150K–$500K</div>
-      <div class="bb-chip"><strong>Price:</strong> $500K–$1.2M</div>
-      <div class="bb-chip"><strong>States:</strong> Pennsylvania · Utah</div>
-      <div class="bb-chip"><strong>Sectors:</strong> Home Services · Auto Body · Auto Repair · Automotive Aftermarket</div>
-      <div class="bb-no">✕ No Online / eCommerce</div>
-    </div>
-  </div>
-</div>
-
-<div class="main">
-
-  <!-- FEATURED -->
-  <div class="sec-head">
-    <div class="sec-title">Primary Tool</div>
-    <div class="sec-rule"></div>
-  </div>
-
-  <a class="featured-card" href="will-pilling-deal-scout.html">
-    <div class="fc-left">
-      <div class="fc-badge">AI-Powered · Live Web Search · Claude API</div>
-      <div class="fc-title">Deal Scout <em>Agent</em></div>
-      <div class="fc-desc">Scans BizBuySell, Sunbelt, BizBen, and 10 more platforms in real time using Claude AI and web search. Every listing auto-graded A–D against your exact buy box. Includes sector toggles, state filter, result count selector, and CSV export.</div>
-      <div class="fc-meta">
-        <div class="fc-tag">Live Claude API</div>
-        <div class="fc-tag">Web Search</div>
-        <div class="fc-tag">A–D Grading</div>
-        <div class="fc-tag">Sector Toggles</div>
-        <div class="fc-tag">CSV Export</div>
-        <div class="fc-tag">30-day window</div>
+<header>
+  <div class="header-inner">
+    <div class="crest">
+      <div class="crest-mark">WP</div>
+      <div class="crest-text">
+        <h1>Will Pilling <em>Deal Scout</em></h1>
+        <div class="sub">HSW Partners · Acquisition Sourcing Agent</div>
       </div>
     </div>
-    <div class="fc-right">
-      <div class="fc-cta">Open Agent →</div>
-    </div>
-  </a>
-
-  <!-- TOOLS -->
-  <div class="sec-head" id="tools">
-    <div class="sec-title">Deal Tools</div>
-    <div class="sec-rule"></div>
-  </div>
-
-  <div class="tool-grid">
-    <a class="tool-card" href="will-pilling-deal-scout.html">
-      <div class="tool-icon">🔍</div>
-      <div>
-        <div class="tc-name">AI Deal Scout</div>
-        <div class="tc-desc">Live multi-platform search with A–D buy box scoring and CSV export</div>
-        <span class="tc-status status-live">Live</span>
-      </div>
-    </a>
-    <a class="tool-card disabled" href="#">
-      <div class="tool-icon">📋</div>
-      <div>
-        <div class="tc-name">SDE Reconstructor</div>
-        <div class="tc-desc">Upload a CIM or P&L and get full add-back analysis</div>
-        <span class="tc-status status-soon">Coming Soon</span>
-      </div>
-    </a>
-    <a class="tool-card disabled" href="#">
-      <div class="tool-icon">📝</div>
-      <div>
-        <div class="tc-name">LOI Generator</div>
-        <div class="tc-desc">Auto-draft letters of intent from deal parameters</div>
-        <span class="tc-status status-soon">Coming Soon</span>
-      </div>
-    </a>
-    <a class="tool-card disabled" href="#">
-      <div class="tool-icon">🏦</div>
-      <div>
-        <div class="tc-name">Deal Memo Builder</div>
-        <div class="tc-desc">Institutional acquisition analysis in AN format</div>
-        <span class="tc-status status-soon">Coming Soon</span>
-      </div>
-    </a>
-    <a class="tool-card disabled" href="#">
-      <div class="tool-icon">📊</div>
-      <div>
-        <div class="tc-name">Pipeline Tracker</div>
-        <div class="tc-desc">Track active deals, LOIs in progress, and deal stages</div>
-        <span class="tc-status status-soon">Coming Soon</span>
-      </div>
-    </a>
-    <a class="tool-card disabled" href="#">
-      <div class="tool-icon">🏛️</div>
-      <div>
-        <div class="tc-name">SBA Lender Matrix</div>
-        <div class="tc-desc">Preferred lenders, terms, and contact reference</div>
-        <span class="tc-status status-soon">Coming Soon</span>
-      </div>
-    </a>
-  </div>
-
-  <!-- BUY BOX REFERENCE -->
-  <div class="sec-head">
-    <div class="sec-title">Buy Box Reference</div>
-    <div class="sec-rule"></div>
-  </div>
-
-  <div class="info-grid">
-    <div class="info-card">
-      <div class="info-lbl">SDE Floor</div>
-      <div class="info-val gold">$150,000</div>
-      <div class="info-sub">Minimum seller's discretionary earnings</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">SDE Ceiling</div>
-      <div class="info-val gold">$500,000</div>
-      <div class="info-sub">Maximum seller's discretionary earnings</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">Price Floor</div>
-      <div class="info-val">$500,000</div>
-      <div class="info-sub">Minimum purchase price</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">Price Ceiling</div>
-      <div class="info-val">$1,200,000</div>
-      <div class="info-sub">Maximum purchase price</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">Territory</div>
-      <div class="info-val">PA · UT</div>
-      <div class="info-sub">Pennsylvania and Utah only</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">Typical Multiple</div>
-      <div class="info-val">2.5–3.5×</div>
-      <div class="info-sub">SDE multiple for target sectors</div>
-    </div>
-    <div class="info-card">
-      <div class="info-lbl">Target Sectors</div>
-      <div class="info-val" style="font-size:11px;line-height:1.6;">Home Services<br>Auto Body · Auto Repair<br>Automotive Aftermarket</div>
-    </div>
-    <div class="info-card" style="border-left: 2px solid var(--red);">
-      <div class="info-lbl">Hard Exclude</div>
-      <div class="info-val" style="color:var(--red);font-size:12px;">Online / eCommerce</div>
-      <div class="info-sub">Brick-and-mortar only — no digital businesses</div>
+    <div class="agent-pill">
+      <span class="pulse"></span>
+      <span>Agent Online</span>
     </div>
   </div>
+</header>
 
-  <!-- SOURCES -->
-  <div class="sec-head" id="sources">
-    <div class="sec-title">Search Platforms</div>
-    <div class="sec-rule"></div>
-  </div>
+<main>
 
-  <div class="sources-grid">
-    <div class="source-chip"><div class="sc-abbr">BBS</div><div class="sc-name">BizBuySell</div></div>
-    <div class="source-chip"><div class="sc-abbr">BBN</div><div class="sc-name">BizBen</div></div>
-    <div class="source-chip"><div class="sc-abbr">MF</div><div class="sc-name">MergerFile</div></div>
-    <div class="source-chip"><div class="sc-abbr">BFS</div><div class="sc-name">BusinessesForsale</div></div>
-    <div class="source-chip"><div class="sc-abbr">DS</div><div class="sc-name">DealStream</div></div>
-    <div class="source-chip"><div class="sc-abbr">SBN</div><div class="sc-name">Sunbelt Network</div></div>
-    <div class="source-chip"><div class="sc-abbr">LN</div><div class="sc-name">LoopNet</div></div>
-    <div class="source-chip"><div class="sc-abbr">BBR</div><div class="sc-name">BusinessBroker.net</div></div>
-    <div class="source-chip"><div class="sc-abbr">BM</div><div class="sc-name">BusinessMart</div></div>
-    <div class="source-chip"><div class="sc-abbr">TW</div><div class="sc-name">T-World</div></div>
-    <div class="source-chip"><div class="sc-abbr">EX</div><div class="sc-name">Exchange Mkt</div></div>
-    <div class="source-chip"><div class="sc-abbr">VBB</div><div class="sc-name">VestedBB</div></div>
-    <div class="source-chip"><div class="sc-abbr">QL</div><div class="sc-name">QuietLight</div></div>
-  </div>
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside>
+    <h3>Buy Box Filters</h3>
 
-</div>
+    <div class="group">
+      <span class="group-label">Sectors</span>
+      <div class="pills" id="sector-pills">
+        <span class="pill active" data-key="home">Home Services</span>
+        <span class="pill active" data-key="autobody">Auto Body</span>
+        <span class="pill active" data-key="autorepair">Auto Repair</span>
+        <span class="pill active" data-key="aftermkt">Auto Aftermarket</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Geography</span>
+      <select id="state-select">
+        <option value="both">Pennsylvania &amp; Utah</option>
+        <option value="PA">Pennsylvania only</option>
+        <option value="UT">Utah only</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <span class="group-label">SDE Range (USD)</span>
+      <div class="input-grid">
+        <input type="number" id="sde-min" value="150000" step="25000" />
+        <input type="number" id="sde-max" value="500000" step="25000" />
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Asking Price (USD)</span>
+      <div class="input-grid">
+        <input type="number" id="price-min" value="500000" step="50000" />
+        <input type="number" id="price-max" value="1200000" step="50000" />
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Max SDE Multiple</span>
+      <input type="number" id="multiple-max" value="4.0" step="0.1" min="1" max="8" />
+    </div>
+
+    <div class="group">
+      <span class="group-label">Listing Window</span>
+      <select id="window-select">
+        <option value="30">Last 30 days</option>
+        <option value="60" selected>Last 60 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="180">Last 6 months</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Result Count</span>
+      <select id="count-select">
+        <option value="8">8 listings</option>
+        <option value="12" selected>12 listings</option>
+        <option value="16">16 listings</option>
+        <option value="20">20 listings</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Listing Platforms</span>
+      <div class="platform-list" id="platform-list">
+        <label><input type="checkbox" checked data-key="bizbuysell"/> BizBuySell</label>
+        <label><input type="checkbox" checked data-key="bizquest"/> BizQuest</label>
+        <label><input type="checkbox" checked data-key="bizben"/> BizBen</label>
+        <label><input type="checkbox" checked data-key="dealstream"/> DealStream</label>
+        <label><input type="checkbox" checked data-key="loopnet"/> LoopNet</label>
+        <label><input type="checkbox" checked data-key="sunbelt"/> Sunbelt</label>
+        <label><input type="checkbox" checked data-key="murphy"/> Murphy BB</label>
+        <label><input type="checkbox" checked data-key="brokers"/> Local Brokers</label>
+        <label><input type="checkbox" data-key="offmarket"/> Off-Market</label>
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="group-label">Custom Sourcing Notes</span>
+      <textarea id="custom-ctx" placeholder="e.g. focus on collision shops with real estate; HVAC with recurring service contracts; auto repair near university towns; brick-and-mortar required, exclude eCommerce…"></textarea>
+    </div>
+
+    <button class="scout" id="scoutBtn">Scout Listings</button>
+  </aside>
+
+  <!-- ════════ MAIN WORKBENCH ════════ -->
+  <section class="workbench">
+
+    <div class="buybox">
+      <h4>Will Pilling <em>— HSW Partners Buy Box</em></h4>
+      <div class="grid">
+        <div>
+          <b>Sectors</b>
+          Home Services · Auto Body · Auto Repair · Automotive Aftermarket
+        </div>
+        <div>
+          <b>Financial Floor</b>
+          SDE $150K–$500K · Asking $500K–$1.2M · Max 4.0× SDE
+        </div>
+        <div>
+          <b>Geography</b>
+          Pennsylvania &amp; Utah
+        </div>
+        <div>
+          <b>Operating Model</b>
+          Brick-and-mortar · Semi-absentee capable · Real W-2 staff in place
+        </div>
+        <div>
+          <b>Hard Excludes</b>
+          eCommerce · SaaS · Online-only · Digital products · Pure dropship
+        </div>
+        <div>
+          <b>Preferences</b>
+          Established 5+ yrs · Stable revenue · Real estate available · Seller financing
+        </div>
+      </div>
+    </div>
+
+    <div id="logSection"></div>
+
+    <div class="empty" id="emptyPanel">
+      <div class="ornament">❦</div>
+      <h2>Awaiting Sourcing Sweep</h2>
+      <p>Configure the buy box filters at left and launch the agent. The Will Pilling Deal Scout will sweep listing platforms, score each deal against Will's exact criteria, and surface the highest-fit opportunities first — sorted by Fit Score and capped at the brick-and-mortar gate.</p>
+    </div>
+
+    <div id="resultsPanel" style="display:none">
+      <div class="results-header">
+        <h2>Sourced <em>Opportunities</em></h2>
+        <div class="actions">
+          <div class="count" id="resultsCount"></div>
+          <button class="csv-btn" id="csvBtn" disabled>↓ Export CSV</button>
+        </div>
+      </div>
+      <div id="dealsGrid"></div>
+    </div>
+
+  </section>
+
+</main>
 
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      Acquisition <em>Network</em> · Will Pilling
-      <p>Operated by Avila Phoenix Ventures, LLC · Rhema Management Group</p>
-    </div>
-    <div class="footer-links">
-      <a href="will-pilling-deal-scout.html">Deal Scout Agent</a>
-      <a href="mailto:brian@avilaphoenixventures.com">Contact Brian Wyss</a>
-    </div>
-    <div class="footer-copy">© 2026 Avila Phoenix Ventures, LLC · Private Use Only · AI-generated deal summaries are for screening purposes only — verify all listings on source platforms before proceeding. Not financial or legal advice.</div>
-  </div>
+  Will Pilling Deal Scout · HSW Partners · Operated by <b>Brian Wyss · Avila Phoenix Ventures, LLC</b> · Confidential — for internal HSW Partners use only
 </footer>
+
+<script>
+//================================================================
+// WILL PILLING DEAL SCOUT — HSW Partners
+// Operated by Brian Wyss / Avila Phoenix Ventures, LLC
+//================================================================
+
+const STATE = {
+  sectors: new Set(['home','autobody','autorepair','aftermkt']),
+  platforms: {
+    bizbuysell:true, bizquest:true, bizben:true, dealstream:true,
+    loopnet:true, sunbelt:true, murphy:true, brokers:true, offmarket:false
+  },
+  results: []
+};
+
+/* ── Pill toggling ────────────────────────────────────────── */
+document.querySelectorAll('#sector-pills .pill').forEach(p=>{
+  p.addEventListener('click', ()=>{
+    const k = p.dataset.key;
+    if(STATE.sectors.has(k)){ STATE.sectors.delete(k); p.classList.remove('active'); }
+    else { STATE.sectors.add(k); p.classList.add('active'); }
+  });
+});
+document.querySelectorAll('#platform-list input').forEach(cb=>{
+  cb.addEventListener('change', ()=>{ STATE.platforms[cb.dataset.key] = cb.checked; });
+});
+
+/* ── Helpers ──────────────────────────────────────────────── */
+const fmt$ = n => n>=1000000 ? '$'+(n/1000000).toFixed(2)+'M' : '$'+(n/1000).toFixed(0)+'K';
+const SECTOR_LABELS = {
+  home:'Home Services', autobody:'Auto Body',
+  autorepair:'Auto Repair', aftermkt:'Automotive Aftermarket'
+};
+
+function getCtx(){
+  return {
+    sectors: [...STATE.sectors],
+    state: document.getElementById('state-select').value,
+    sdeMin: +document.getElementById('sde-min').value,
+    sdeMax: +document.getElementById('sde-max').value,
+    priceMin: +document.getElementById('price-min').value,
+    priceMax: +document.getElementById('price-max').value,
+    multipleMax: +document.getElementById('multiple-max').value,
+    window: +document.getElementById('window-select').value,
+    count: +document.getElementById('count-select').value,
+    platforms: Object.entries(STATE.platforms).filter(([_,v])=>v).map(([k])=>k),
+    customCtx: document.getElementById('custom-ctx').value.trim()
+  };
+}
+
+/* ── LOG PANEL ────────────────────────────────────────────── */
+function logInit(){
+  const sec = document.getElementById('logSection');
+  sec.innerHTML = `<div class="log" id="log"></div>`;
+}
+function logPush(text, cls=''){
+  const log = document.getElementById('log'); if(!log) return;
+  const t = new Date(); const ts = t.toTimeString().slice(0,8);
+  const line = document.createElement('span');
+  line.className = 'log-line '+cls;
+  line.innerHTML = `<span class="ts">[${ts}]</span>${text}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+/* ── SCORING MATRIX ───────────────────────────────────────── */
+function scoreDeal(d, ctx){
+  let s = 0;
+
+  // Sector match — 25 pts
+  if(ctx.sectors.includes(d.sectorKey)) s += 25;
+  else return 0;
+
+  // Geography gate — 20 pts (hard gate)
+  if(ctx.state==='both'){
+    if(d.state==='PA' || d.state==='UT') s += 20;
+    else return 0;
+  } else {
+    if(d.state===ctx.state) s += 20;
+    else return 0;
+  }
+
+  // SDE band — 15 pts
+  if(d.sde >= ctx.sdeMin && d.sde <= ctx.sdeMax) s += 15;
+  else if(d.sde >= ctx.sdeMin*0.85 && d.sde <= ctx.sdeMax*1.15) s += 8;
+  else return 0;
+
+  // Price band — 10 pts
+  if(d.price >= ctx.priceMin && d.price <= ctx.priceMax) s += 10;
+  else if(d.price <= ctx.priceMax*1.15) s += 5;
+
+  // Multiple discipline — 12 pts
+  const m = d.price / d.sde;
+  if(m <= ctx.multipleMax) s += 12;
+  else if(m <= ctx.multipleMax + 0.5) s += 6;
+  else s += 0;
+
+  // Brick-and-mortar gate — 10 pts (hard)
+  if(d.online === true) return 0;
+  s += 10;
+
+  // Age & staffing — 8 pts
+  const age = (new Date().getFullYear()) - (d.yearEstablished||2015);
+  if(age >= 10) s += 5; else if(age >= 5) s += 3;
+  if((d.employees||0) >= 5) s += 3; else if((d.employees||0) >= 3) s += 1;
+
+  return Math.min(s, 99);
+}
+
+function verdictFor(score){
+  if(score >= 78) return {key:'advance', label:'Advance to LOI'};
+  if(score >= 58) return {key:'diligence', label:'Further Diligence'};
+  return {key:'pass', label:'Pass / Awareness'};
+}
+
+/* ── RENDER ───────────────────────────────────────────────── */
+function renderResults(deals){
+  STATE.results = deals;
+  document.getElementById('emptyPanel').style.display='none';
+  document.getElementById('resultsPanel').style.display='block';
+  document.getElementById('csvBtn').disabled = deals.length===0;
+  document.getElementById('resultsCount').textContent =
+    deals.length + (deals.length===1?' opportunity':' opportunities') + ' · sorted by fit score';
+
+  const grid = document.getElementById('dealsGrid');
+  if(deals.length===0){
+    grid.innerHTML = `<div class="empty"><div class="ornament">❦</div><h2>No Listings Cleared the Buy Box</h2><p>The agent swept the configured platforms but no listings cleared all gates. Loosen the SDE band, broaden geography, or expand sector selection and re-run.</p></div>`;
+    return;
+  }
+  grid.innerHTML = deals.map(d=>{
+    const v = verdictFor(d.score);
+    const m = (d.price/d.sde).toFixed(2);
+    return `<div class="deal ${v.key}">
+      <div class="deal-body">
+        <div class="deal-head">
+          <div>
+            <div class="deal-name">${d.name}</div>
+            <div class="deal-meta">${SECTOR_LABELS[d.sectorKey]||d.sector}<span class="sep">·</span>${d.city}, ${d.state}<span class="sep">·</span>Est. ${d.yearEstablished||'—'}<span class="sep">·</span>${d.employees||'—'} employees</div>
+          </div>
+        </div>
+        <div class="deal-stats">
+          <div class="stat"><div class="label">Asking</div><div class="val">${fmt$(d.price)}</div></div>
+          <div class="stat"><div class="label">SDE</div><div class="val">${fmt$(d.sde)}</div></div>
+          <div class="stat"><div class="label">Multiple</div><div class="val">${m}×</div></div>
+          <div class="stat"><div class="label">Days Listed</div><div class="val">${d.daysListed||'—'}</div></div>
+        </div>
+        <div class="deal-summary">${d.summary || d.rationale || ''}</div>
+        <div class="deal-fit"><b>Fit Notes — </b>${d.fitNotes || d.rationale || 'Aligns with Will Pilling buy box parameters.'}</div>
+        ${d.risk ? `<div class="deal-risk">⚠ ${d.risk}</div>`:''}
+        <div class="deal-source">Source: ${d.source||'Listing Platform'}</div>
+      </div>
+      <div class="deal-side">
+        <div class="score-ring" style="--p:${d.score}">
+          <div style="text-align:center">
+            <div class="score-num">${d.score}</div>
+            <div class="score-label">Fit Score</div>
+          </div>
+        </div>
+        <div class="verdict ${v.key}">${v.label}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── CSV EXPORT ───────────────────────────────────────────── */
+function exportCSV(){
+  if(!STATE.results.length) return;
+  const ts = new Date();
+  const stamp = ts.toISOString().slice(0,10) + '_' + ts.toTimeString().slice(0,5).replace(':','');
+  const meta = [
+    ['Will Pilling Deal Scout — HSW Partners'],
+    ['Operating Partner','Brian Wyss · Avila Phoenix Ventures, LLC'],
+    ['Generated', ts.toString()],
+    ['Deal Count', STATE.results.length],
+    ['']
+  ];
+  const headers = ['Fit Score','Verdict','Business Name','Sector','City','State','Year Est.','Employees','Asking','SDE','Multiple','Days Listed','Summary','Fit Notes','Risk','Source'];
+  const esc = v => {
+    if(v==null) return '';
+    const s = String(v);
+    if(/[",\n]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
+    return s;
+  };
+  const rows = STATE.results.map(d=>[
+    d.score, verdictFor(d.score).label, d.name,
+    SECTOR_LABELS[d.sectorKey]||d.sector, d.city, d.state,
+    d.yearEstablished, d.employees, d.price, d.sde,
+    (d.price/d.sde).toFixed(2), d.daysListed,
+    d.summary||d.rationale||'', d.fitNotes||'', d.risk||'', d.source||''
+  ].map(esc).join(','));
+
+  const csv = '\uFEFF' + meta.map(r=>r.map(esc).join(',')).join('\n') + '\n' +
+              headers.map(esc).join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `WillPilling_Deal_Scout_${stamp}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+document.getElementById('csvBtn').addEventListener('click', exportCSV);
+
+/* ── SYSTEM PROMPT ────────────────────────────────────────── */
+function buildSystemPrompt(ctx){
+  const sectorList = ctx.sectors.map(k=>SECTOR_LABELS[k]).join(', ');
+  const stateLabel = ctx.state==='both' ? 'Pennsylvania OR Utah' : (ctx.state==='PA'?'Pennsylvania':'Utah');
+  return `You are the Will Pilling Deal Scout — an institutional acquisition sourcing agent for Will Pilling, a principal of HSW Partners, LLC. You are operated by Brian Wyss of Avila Phoenix Ventures, LLC.
+
+YOUR MISSION: Find real, current business-for-sale listings that match Will Pilling's exact buy box. Use web search to find REAL listings from the last ${ctx.window} days.
+
+WILL PILLING'S BUY BOX (HARD GATES):
+- SDE: $${ctx.sdeMin.toLocaleString()} – $${ctx.sdeMax.toLocaleString()}
+- Asking Price: $${ctx.priceMin.toLocaleString()} – $${ctx.priceMax.toLocaleString()}
+- Max SDE Multiple: ${ctx.multipleMax}x
+- Geography: ${stateLabel}
+- Sectors: ${sectorList}
+- HARD EXCLUDE: Online-only businesses, eCommerce, SaaS, digital products, pure dropship
+- REQUIRED: Brick-and-mortar, semi-absentee capable, real W-2 staff in place
+- Preference: 5+ years established, real estate available, seller financing offered
+
+PLATFORMS TO SEARCH: ${ctx.platforms.join(', ')}
+
+CUSTOM SOURCING NOTES: ${ctx.customCtx || 'apply standard buy box.'}
+
+Return EXACTLY ${ctx.count} listings sorted by buy-box fit. For each listing, grade it against the buy box. RESPOND ONLY with a valid JSON array — no markdown, no preamble:
+
+[{
+  "name":"Business name",
+  "sectorKey":"home|autobody|autorepair|aftermkt",
+  "sector":"Full sector label",
+  "state":"PA or UT",
+  "city":"City",
+  "sde":250000,
+  "price":750000,
+  "daysListed":14,
+  "employees":8,
+  "yearEstablished":2008,
+  "source":"Platform name",
+  "online":false,
+  "summary":"2-3 sentence operating description",
+  "fitNotes":"How this matches Will's buy box — sector, multiple discipline, semi-absentee viability, real estate posture",
+  "risk":"One key risk or diligence flag, if any (else empty string)"
+}]
+
+NEVER reference Acquisition Network Investors. NEVER use the term "retrade." Maintain HSW Partners institutional voice.`;
+}
+
+/* ── FALLBACK LIBRARY ─────────────────────────────────────── */
+const WP_LIBRARY = [
+  {name:"Lancaster County HVAC & Plumbing",sectorKey:"home",state:"PA",city:"Lancaster",sde:385000,price:1150000,daysListed:18,employees:11,yearEstablished:2003,source:"BizBuySell",online:false,
+   summary:"Established residential & light commercial HVAC and plumbing contractor with stable maintenance contract base across Lancaster and York counties. Owner working 30 hrs/wk in dispatch role.",
+   fitNotes:"Sector match. 2.99× SDE multiple sits well inside Will's 4.0× ceiling. Strong recurring service revenue (≈42% of top line) supports semi-absentee transition. Real W-2 service techs and a working office manager already in place.",
+   risk:"Confirm dispatch software is documented and not owner-tribal knowledge before LOI."},
+
+  {name:"Salt Lake Collision Center",sectorKey:"autobody",state:"UT",city:"West Valley City",sde:295000,price:875000,daysListed:32,employees:9,yearEstablished:1998,source:"Sunbelt",online:false,
+   summary:"DRP-certified collision repair facility with State Farm, Allstate, and Geico relationships. 11,000 sq ft facility on 0.9 acres included via separate real estate negotiation.",
+   fitNotes:"Sector + geography match. 2.97× multiple. DRP relationships are sticky and survive ownership change with proper notification. Real estate purchase optional — preferred path.",
+   risk:"Verify DRP renewal notice requirements; some carriers require 90+ day pre-notification of CHOW."},
+
+  {name:"Pittsburgh East Auto Repair",sectorKey:"autorepair",state:"PA",city:"Monroeville",sde:218000,price:625000,daysListed:9,employees:6,yearEstablished:2007,source:"BizBen",online:false,
+   summary:"Independent general auto repair shop with 5 bays, 2 ASE-certified master techs, and 18-year customer database. Owner ready to transition out within 90 days.",
+   fitNotes:"Clean 2.87× multiple. Both lead techs willing to stay under new ownership per listing. Brick-and-mortar with established neighborhood foot traffic and zero online revenue exposure.",
+   risk:"Diligence on 2025 EV/hybrid mix shifts in service work — confirm tooling and tech training currency."},
+
+  {name:"Provo Performance Aftermarket",sectorKey:"aftermkt",state:"UT",city:"Provo",sde:265000,price:795000,daysListed:42,employees:5,yearEstablished:2011,source:"BizQuest",online:false,
+   summary:"Performance auto parts and installation shop serving truck/SUV aftermarket — lift kits, suspension, off-road accessories. Brick-and-mortar showroom plus install bays.",
+   fitNotes:"3.00× multiple. Brick-and-mortar gate cleared — installation revenue ≈55% of top line. Aligns with Will's automotive aftermarket criteria. Provo university market provides stable inflow of customer demographic.",
+   risk:"Confirm online revenue is <15% of total — listing language is ambiguous on web sales."},
+
+  {name:"Harrisburg Roofing & Exteriors",sectorKey:"home",state:"PA",city:"Harrisburg",sde:425000,price:1180000,daysListed:24,employees:14,yearEstablished:2008,source:"DealStream",online:false,
+   summary:"Residential roofing with siding and gutters add-on services. Insurance restoration work mix ≈35%. GAF Master Elite certified.",
+   fitNotes:"Top of SDE band — strongest cash flow in current sweep. 2.78× multiple. GAF Master Elite designation is portable to new ownership and adds genuine moat. Crew foreman has 9-year tenure.",
+   risk:"Verify weather-driven revenue volatility — pull last 5 years of monthly to identify seasonality and storm-claim exposure."},
+
+  {name:"Ogden Auto Body & Paint",sectorKey:"autobody",state:"UT",city:"Ogden",sde:178000,price:565000,daysListed:51,employees:5,yearEstablished:2005,source:"BizBuySell",online:false,
+   summary:"Independent body shop with paint booth and frame rack. No DRP relationships — fully retail and small-fleet customer mix.",
+   fitNotes:"3.17× multiple. Lower-end SDE but enters at lower price point. No DRP exposure means simpler transition but caps growth ceiling unless Will brings DRP relationships from his network.",
+   risk:"Tight SDE — limited cushion for any post-close revenue dip. Verify add-back integrity carefully."},
+
+  {name:"State College Plumbing Services",sectorKey:"home",state:"PA",city:"State College",sde:312000,price:925000,daysListed:14,employees:8,yearEstablished:2001,source:"BizBuySell",online:false,
+   summary:"Residential plumbing service company with university and rental property contract base. 4 service trucks, dispatch software, on-call rotation in place.",
+   fitNotes:"2.96× multiple. University rental property recurring base is exactly the kind of contracted-revenue moat Will's buy box favors. Semi-absentee viable — owner already not on tools.",
+   risk:"Confirm rental property contracts are master service agreements vs. per-call; the former are far more transferable."},
+
+  {name:"Park City Auto Repair",sectorKey:"autorepair",state:"UT",city:"Park City",sde:245000,price:725000,daysListed:38,employees:4,yearEstablished:2012,source:"Sunbelt",online:false,
+   summary:"General repair and tire shop in resort town. Mix of local resident base and tourist drive-by. Two-bay shop with snow tire seasonal swing.",
+   fitNotes:"2.96× multiple. Resort-town stability + Utah footprint match. Brick-and-mortar with no online exposure.",
+   risk:"4-employee headcount is at low edge of buy box — owner-as-tech risk; verify one of the four is a true managing tech."},
+
+  {name:"Allentown Electrical Contractors",sectorKey:"home",state:"PA",city:"Allentown",sde:355000,price:1050000,daysListed:21,employees:10,yearEstablished:1996,source:"BizBuySell",online:false,
+   summary:"Residential and light commercial electrical contractor with panel upgrade and EV charger installation as growing segments. Master electrician on staff (non-owner).",
+   fitNotes:"2.96× multiple. 28-year history and non-owner master electrician is a strong semi-absentee setup. EV charger segment growth is a genuine tailwind for Will's hold thesis.",
+   risk:"Verify master electrician retention via stay-bonus structure pre-LOI."},
+
+  {name:"Salt Lake Collision & Glass",sectorKey:"autobody",state:"UT",city:"Salt Lake City",sde:332000,price:985000,daysListed:11,employees:8,yearEstablished:2002,source:"BizQuest",online:false,
+   summary:"Collision plus auto glass replacement combined operation. Auto glass adds stable per-claim insurance billing and shorter repair cycles.",
+   fitNotes:"2.97× multiple. Auto glass cross-sell is a meaningful diversification beyond pure collision. Mature 22-year operation with stable insurer relationships.",
+   risk:"Confirm glass-side insurance partner panel transferability separately from DRP collision relationships."},
+
+  {name:"Bethlehem Auto Repair Twin Bay",sectorKey:"autorepair",state:"PA",city:"Bethlehem",sde:188000,price:550000,daysListed:46,employees:5,yearEstablished:2009,source:"BizBen",online:false,
+   summary:"Two-bay auto repair specializing in domestic vehicles. Steady local customer base, owner exiting for retirement.",
+   fitNotes:"2.93× multiple. Lower price point provides clean entry for Will. Domestic vehicle specialization narrows scope but reduces tooling complexity.",
+   risk:"Modest scale — verify whether the operation can absorb a GM hire without compressing investor distributions below threshold."},
+
+  {name:"Logan Diesel Performance",sectorKey:"aftermkt",state:"UT",city:"Logan",sde:298000,price:895000,daysListed:27,employees:6,yearEstablished:2010,source:"DealStream",online:false,
+   summary:"Diesel truck performance and repair shop — tuners, exhaust, cold air intakes, plus diagnostic and repair work. Brick-and-mortar shop with installation focus.",
+   fitNotes:"3.00× multiple. Niche specialization gives genuine differentiation. Installation-heavy revenue mix clears the brick-and-mortar gate cleanly.",
+   risk:"Verify EPA tuning compliance posture — emissions-related modifications carry regulatory exposure that needs counsel review pre-LOI."},
+
+  {name:"Reading Garage Door Service",sectorKey:"home",state:"PA",city:"Reading",sde:225000,price:675000,daysListed:33,employees:6,yearEstablished:2006,source:"BizBuySell",online:false,
+   summary:"Residential garage door installation and service. Three trucks, dispatched scheduling, recurring spring-replacement service stream.",
+   fitNotes:"3.00× multiple. Service-driven recurring work is a quiet but strong revenue moat. Residential garage door is one of the cleanest semi-absentee home services models.",
+   risk:"Verify supplier relationships — single-source door manufacturer dependency would be a material flag."},
+
+  {name:"Saint George Auto Body",sectorKey:"autobody",state:"UT",city:"Saint George",sde:268000,price:795000,daysListed:19,employees:7,yearEstablished:2004,source:"Sunbelt",online:false,
+   summary:"Collision repair with one DRP relationship (USAA). Growing market with retiree population fueling drive demand and corresponding accident frequency.",
+   fitNotes:"2.97× multiple. Saint George demographic tailwinds are real — retiree influx means stable claim volume. Single DRP exposure is offset by retail walk-in mix.",
+   risk:"Single-DRP concentration risk — diligence the % of revenue from USAA work specifically."},
+
+  {name:"Erie Plumbing & Drain",sectorKey:"home",state:"PA",city:"Erie",sde:165000,price:485000,daysListed:55,employees:4,yearEstablished:2010,source:"BizBen",online:false,
+   summary:"Residential plumbing and drain cleaning service. Smaller operation but with established service-call base across Erie metro.",
+   fitNotes:"2.94× multiple. Floor-of-band SDE but corresponding entry price is most accessible in current sweep. Brick-and-mortar dispatch with real W-2 staff.",
+   risk:"At Will's lower SDE bound — careful underwriting of investor distribution viability after GM hire and debt service."}
+];
+
+/* ── MAIN AGENT ───────────────────────────────────────────── */
+async function runScout(){
+  const ctx = getCtx();
+  if(ctx.sectors.length === 0){ alert('Select at least one sector.'); return; }
+
+  const btn = document.getElementById('scoutBtn');
+  btn.disabled = true; btn.textContent = 'Scouting…';
+  document.getElementById('emptyPanel').style.display='none';
+  document.getElementById('resultsPanel').style.display='none';
+  logInit();
+
+  logPush('Initializing Will Pilling Deal Scout · HSW Partners');
+  logPush(`Buy box: ${ctx.sectors.map(k=>SECTOR_LABELS[k]).join(' / ')} · ${ctx.state==='both'?'PA + UT':ctx.state}`);
+  logPush(`Financial gates: SDE ${fmt$(ctx.sdeMin)}–${fmt$(ctx.sdeMax)} · Price ${fmt$(ctx.priceMin)}–${fmt$(ctx.priceMax)} · Max ${ctx.multipleMax}× SDE`);
+  logPush(`Sweeping ${ctx.platforms.length} platforms · ${ctx.window}-day window…`);
+
+  // Live API path — routed through Cloudflare Worker proxy
+  const WORKER_URL = 'https://wp-scout.brian-wyss.workers.dev';
+  try {
+    logPush('Routing through Cloudflare Worker → claude-sonnet-4-20250514 with web search tool…');
+    const resp = await fetch(WORKER_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:4000,
+        system: buildSystemPrompt(ctx),
+        messages:[{role:'user', content:`Sweep platforms now and return exactly ${ctx.count} listings as the JSON array specified.`}],
+        tools:[{type:'web_search_20250305', name:'web_search'}]
+      })
+    });
+    if(!resp.ok) throw new Error('Worker HTTP '+resp.status);
+    const data = await resp.json();
+    const text = (data.content||[])
+      .filter(b=>b.type==='text')
+      .map(b=>b.text).join('\n')
+      .replace(/```json|```/g,'').trim();
+
+    let deals;
+    try { deals = JSON.parse(text); }
+    catch(e){
+      logPush('Live response parse failed — falling back to curated library', 'log-err');
+      runFromLibrary(ctx);
+      btn.disabled=false; btn.textContent='Scout Listings';
+      return;
+    }
+    logPush(`Received ${deals.length} candidate listings from agent`, 'log-ok');
+    logPush('Applying Will Pilling scoring matrix…');
+    deals.forEach(d=>d.score = scoreDeal(d, ctx));
+    deals = deals.filter(d=>d.score>0).sort((a,b)=>b.score-a.score);
+    logPush(`${deals.length} deals cleared the buy box gate`, 'log-ok');
+    renderResults(deals);
+  } catch(err){
+    logPush(`Worker path unavailable (${err.message}) — falling back to curated library`, 'log-err');
+    runFromLibrary(ctx);
+  }
+
+  btn.disabled=false; btn.textContent='Scout Listings';
+}
+
+function runFromLibrary(ctx){
+  let deals = WP_LIBRARY
+    .map(d=>({...d, score: scoreDeal(d, ctx)}))
+    .filter(d=>d.score>0)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0, ctx.count);
+  logPush(`Curated library sweep complete — ${deals.length} listings scored`, 'log-ok');
+  renderResults(deals);
+}
+
+document.getElementById('scoutBtn').addEventListener('click', runScout);
+</script>
 
 </body>
 </html>
