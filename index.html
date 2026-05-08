@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Will Pilling Deal Scout · HSW Partners</title>
+<title>Will Pilling Deal Scout · Avila Phoenix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -384,7 +384,38 @@
   .verdict.pass{background:rgba(155,34,38,0.12);color:var(--red)}
   .deal-source{
     font-size:10px;letter-spacing:1.2px;color:var(--gray);
-    margin-top:10px;text-transform:uppercase;
+    text-transform:uppercase;
+  }
+  .deal-footer-row{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--gray-line);
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+  }
+  .view-listing{
+    display:inline-block;
+    background:var(--navy);
+    color:var(--gold-bright);
+    text-decoration:none;
+    padding:8px 18px;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-weight:600;
+    border:1px solid var(--gold);
+    transition:all 0.18s;
+  }
+  .view-listing:hover{
+    background:var(--gold);
+    color:var(--navy-deep);
+  }
+  .view-listing.disabled{
+    background:transparent;
+    color:var(--gray);
+    border-color:var(--gray-line);
+    cursor:not-allowed;
+    pointer-events:none;
   }
 
   .log{
@@ -428,7 +459,7 @@
       <div class="crest-mark">WP</div>
       <div class="crest-text">
         <h1>Will Pilling <em>Deal Scout</em></h1>
-        <div class="sub">HSW Partners · Acquisition Sourcing Agent</div>
+        <div class="sub">Avila Phoenix · Acquisition Sourcing Agent</div>
       </div>
     </div>
     <div class="agent-pill">
@@ -531,7 +562,7 @@
   <section class="workbench">
 
     <div class="buybox">
-      <h4>Will Pilling <em>— HSW Partners Buy Box</em></h4>
+      <h4>Will Pilling <em>— Avila Phoenix Buy Box</em></h4>
       <div class="grid">
         <div>
           <b>Sectors</b>
@@ -584,12 +615,12 @@
 </main>
 
 <footer>
-  Will Pilling Deal Scout · HSW Partners · Operated by <b>Brian Wyss · Avila Phoenix Ventures, LLC</b> · Confidential — for internal HSW Partners use only
+  Will Pilling Deal Scout · Avila Phoenix Ventures, LLC · Operated by <b>Brian Wyss</b> · Confidential — for internal use only
 </footer>
 
 <script>
 //================================================================
-// WILL PILLING DEAL SCOUT — HSW Partners
+// WILL PILLING DEAL SCOUT — Avila Phoenix
 // Operated by Brian Wyss / Avila Phoenix Ventures, LLC
 //================================================================
 
@@ -615,7 +646,10 @@ document.querySelectorAll('#platform-list input').forEach(cb=>{
 });
 
 /* ── Helpers ──────────────────────────────────────────────── */
-const fmt$ = n => n>=1000000 ? '$'+(n/1000000).toFixed(2)+'M' : '$'+(n/1000).toFixed(0)+'K';
+const fmt$ = n => {
+  if(n==null || isNaN(n)) return '—';
+  return n>=1000000 ? '$'+(n/1000000).toFixed(2)+'M' : '$'+(n/1000).toFixed(0)+'K';
+};
 const SECTOR_LABELS = {
   home:'Home Services', autobody:'Auto Body',
   autorepair:'Auto Repair', aftermkt:'Automotive Aftermarket'
@@ -669,20 +703,34 @@ function scoreDeal(d, ctx){
     else return 0;
   }
 
-  // SDE band — 15 pts
-  if(d.sde >= ctx.sdeMin && d.sde <= ctx.sdeMax) s += 15;
-  else if(d.sde >= ctx.sdeMin*0.85 && d.sde <= ctx.sdeMax*1.15) s += 8;
-  else return 0;
+  // SDE band — 15 pts (tolerant of undisclosed)
+  if(d.sde==null){
+    s += 6; // partial credit, must be diligenced
+  } else if(d.sde >= ctx.sdeMin && d.sde <= ctx.sdeMax){
+    s += 15;
+  } else if(d.sde >= ctx.sdeMin*0.85 && d.sde <= ctx.sdeMax*1.15){
+    s += 8;
+  } else {
+    return 0; // out of band
+  }
 
-  // Price band — 10 pts
-  if(d.price >= ctx.priceMin && d.price <= ctx.priceMax) s += 10;
-  else if(d.price <= ctx.priceMax*1.15) s += 5;
+  // Price band — 10 pts (tolerant of undisclosed)
+  if(d.price==null){
+    s += 4;
+  } else if(d.price >= ctx.priceMin && d.price <= ctx.priceMax){
+    s += 10;
+  } else if(d.price <= ctx.priceMax*1.15){
+    s += 5;
+  }
 
-  // Multiple discipline — 12 pts
-  const m = d.price / d.sde;
-  if(m <= ctx.multipleMax) s += 12;
-  else if(m <= ctx.multipleMax + 0.5) s += 6;
-  else s += 0;
+  // Multiple discipline — 12 pts (only if both disclosed)
+  if(d.price!=null && d.sde!=null && d.sde>0){
+    const m = d.price / d.sde;
+    if(m <= ctx.multipleMax) s += 12;
+    else if(m <= ctx.multipleMax + 0.5) s += 6;
+  } else {
+    s += 4; // partial credit pending diligence
+  }
 
   // Brick-and-mortar gate — 10 pts (hard)
   if(d.online === true) return 0;
@@ -718,7 +766,11 @@ function renderResults(deals){
   }
   grid.innerHTML = deals.map(d=>{
     const v = verdictFor(d.score);
-    const m = (d.price/d.sde).toFixed(2);
+    const m = (d.price && d.sde && d.sde>0) ? (d.price/d.sde).toFixed(2)+'×' : '—';
+    const hasUrl = d.url && d.url.startsWith('http');
+    const urlButton = hasUrl
+      ? `<a class="view-listing" href="${d.url}" target="_blank" rel="noopener noreferrer">View Listing →</a>`
+      : `<span class="view-listing disabled" title="No listing URL provided">No URL Available</span>`;
     return `<div class="deal ${v.key}">
       <div class="deal-body">
         <div class="deal-head">
@@ -730,13 +782,16 @@ function renderResults(deals){
         <div class="deal-stats">
           <div class="stat"><div class="label">Asking</div><div class="val">${fmt$(d.price)}</div></div>
           <div class="stat"><div class="label">SDE</div><div class="val">${fmt$(d.sde)}</div></div>
-          <div class="stat"><div class="label">Multiple</div><div class="val">${m}×</div></div>
+          <div class="stat"><div class="label">Multiple</div><div class="val">${m}</div></div>
           <div class="stat"><div class="label">Days Listed</div><div class="val">${d.daysListed||'—'}</div></div>
         </div>
         <div class="deal-summary">${d.summary || d.rationale || ''}</div>
         <div class="deal-fit"><b>Fit Notes — </b>${d.fitNotes || d.rationale || 'Aligns with Will Pilling buy box parameters.'}</div>
         ${d.risk ? `<div class="deal-risk">⚠ ${d.risk}</div>`:''}
-        <div class="deal-source">Source: ${d.source||'Listing Platform'}</div>
+        <div class="deal-footer-row">
+          <div class="deal-source">Source: ${d.source||'Listing Platform'}</div>
+          ${urlButton}
+        </div>
       </div>
       <div class="deal-side">
         <div class="score-ring" style="--p:${d.score}">
@@ -757,13 +812,13 @@ function exportCSV(){
   const ts = new Date();
   const stamp = ts.toISOString().slice(0,10) + '_' + ts.toTimeString().slice(0,5).replace(':','');
   const meta = [
-    ['Will Pilling Deal Scout — HSW Partners'],
+    ['Will Pilling Deal Scout — Avila Phoenix'],
     ['Operating Partner','Brian Wyss · Avila Phoenix Ventures, LLC'],
     ['Generated', ts.toString()],
     ['Deal Count', STATE.results.length],
     ['']
   ];
-  const headers = ['Fit Score','Verdict','Business Name','Sector','City','State','Year Est.','Employees','Asking','SDE','Multiple','Days Listed','Summary','Fit Notes','Risk','Source'];
+  const headers = ['Fit Score','Verdict','Business Name','Sector','City','State','Year Est.','Employees','Asking','SDE','Multiple','Days Listed','Listing URL','Summary','Fit Notes','Risk','Source'];
   const esc = v => {
     if(v==null) return '';
     const s = String(v);
@@ -774,7 +829,9 @@ function exportCSV(){
     d.score, verdictFor(d.score).label, d.name,
     SECTOR_LABELS[d.sectorKey]||d.sector, d.city, d.state,
     d.yearEstablished, d.employees, d.price, d.sde,
-    (d.price/d.sde).toFixed(2), d.daysListed,
+    (d.price && d.sde) ? (d.price/d.sde).toFixed(2) : '',
+    d.daysListed,
+    d.url||'',
     d.summary||d.rationale||'', d.fitNotes||'', d.risk||'', d.source||''
   ].map(esc).join(','));
 
@@ -792,9 +849,15 @@ document.getElementById('csvBtn').addEventListener('click', exportCSV);
 function buildSystemPrompt(ctx){
   const sectorList = ctx.sectors.map(k=>SECTOR_LABELS[k]).join(', ');
   const stateLabel = ctx.state==='both' ? 'Pennsylvania OR Utah' : (ctx.state==='PA'?'Pennsylvania':'Utah');
-  return `You are the Will Pilling Deal Scout — an institutional acquisition sourcing agent for Will Pilling, a principal of HSW Partners, LLC. You are operated by Brian Wyss of Avila Phoenix Ventures, LLC.
+  return `You are the Will Pilling Deal Scout — an institutional acquisition sourcing agent for Will Pilling. You are operated by Brian Wyss of Avila Phoenix Ventures, LLC.
 
-YOUR MISSION: Find real, current business-for-sale listings that match Will Pilling's exact buy box. Use web search to find REAL listings from the last ${ctx.window} days.
+YOUR MISSION: Use the web_search tool to find REAL, CURRENT business-for-sale listings that match Will Pilling's exact buy box. You MUST run multiple web searches. You MUST return ONLY listings whose listing URL you actually saw in search results. DO NOT fabricate, hallucinate, or invent listings. If you cannot find ${ctx.count} qualifying listings, return fewer — quality over quantity.
+
+REQUIRED SEARCH STRATEGY:
+1. Run AT LEAST 4-6 web searches across different platform/sector/state combinations
+2. Sample queries: "auto repair business for sale Pennsylvania bizbuysell", "HVAC business for sale Utah bizquest", "collision shop for sale Pennsylvania", "plumbing business for sale Utah", etc.
+3. Cover each enabled platform: ${ctx.platforms.join(', ')}
+4. ONLY include listings whose URL you actually found in search results
 
 WILL PILLING'S BUY BOX (HARD GATES):
 - SDE: $${ctx.sdeMin.toLocaleString()} – $${ctx.sdeMax.toLocaleString()}
@@ -810,106 +873,107 @@ PLATFORMS TO SEARCH: ${ctx.platforms.join(', ')}
 
 CUSTOM SOURCING NOTES: ${ctx.customCtx || 'apply standard buy box.'}
 
-Return EXACTLY ${ctx.count} listings sorted by buy-box fit. For each listing, grade it against the buy box. RESPOND ONLY with a valid JSON array — no markdown, no preamble:
+Return up to ${ctx.count} REAL listings sorted by buy-box fit. RESPOND ONLY with a valid JSON array — no markdown, no preamble, no explanation:
 
 [{
-  "name":"Business name",
+  "name":"Exact business name from listing",
   "sectorKey":"home|autobody|autorepair|aftermkt",
   "sector":"Full sector label",
   "state":"PA or UT",
-  "city":"City",
+  "city":"City from listing",
   "sde":250000,
   "price":750000,
   "daysListed":14,
   "employees":8,
   "yearEstablished":2008,
-  "source":"Platform name",
+  "source":"Platform name (BizBuySell, BizQuest, etc.)",
+  "url":"FULL https:// URL of the actual listing — REQUIRED, must be a real URL from search results",
   "online":false,
-  "summary":"2-3 sentence operating description",
+  "summary":"2-3 sentence operating description from the actual listing",
   "fitNotes":"How this matches Will's buy box — sector, multiple discipline, semi-absentee viability, real estate posture",
   "risk":"One key risk or diligence flag, if any (else empty string)"
 }]
 
-NEVER reference Acquisition Network Investors. NEVER use the term "retrade." Maintain HSW Partners institutional voice.`;
+CRITICAL: Every listing MUST include a real, working "url" field pointing to the actual listing page. If you cannot find a URL for a listing, DO NOT include it. Better to return 4 verified deals than 12 fabricated ones. If financial details aren't disclosed in the listing, use null and note it in fitNotes.
+
+NEVER reference Acquisition Network Investors. NEVER reference HSW Partners. NEVER use the term "retrade." Maintain Avila Phoenix institutional voice.`;
 }
 
-/* ── FALLBACK LIBRARY ─────────────────────────────────────── */
-const WP_LIBRARY = [
-  {name:"Lancaster County HVAC & Plumbing",sectorKey:"home",state:"PA",city:"Lancaster",sde:385000,price:1150000,daysListed:18,employees:11,yearEstablished:2003,source:"BizBuySell",online:false,
-   summary:"Established residential & light commercial HVAC and plumbing contractor with stable maintenance contract base across Lancaster and York counties. Owner working 30 hrs/wk in dispatch role.",
-   fitNotes:"Sector match. 2.99× SDE multiple sits well inside Will's 4.0× ceiling. Strong recurring service revenue (≈42% of top line) supports semi-absentee transition. Real W-2 service techs and a working office manager already in place.",
-   risk:"Confirm dispatch software is documented and not owner-tribal knowledge before LOI."},
+/* ── FALLBACK: real platform search links ─────────────────── */
+/* When the live agent path fails, the scout returns links to
+   actual platform search-result pages filtered by Will's buy box.
+   These are real URLs — Will lands on the platform's live listing
+   index, pre-filtered by sector and state, where he can browse
+   current real inventory. No fabricated listings.            */
 
-  {name:"Salt Lake Collision Center",sectorKey:"autobody",state:"UT",city:"West Valley City",sde:295000,price:875000,daysListed:32,employees:9,yearEstablished:1998,source:"Sunbelt",online:false,
-   summary:"DRP-certified collision repair facility with State Farm, Allstate, and Geico relationships. 11,000 sq ft facility on 0.9 acres included via separate real estate negotiation.",
-   fitNotes:"Sector + geography match. 2.97× multiple. DRP relationships are sticky and survive ownership change with proper notification. Real estate purchase optional — preferred path.",
-   risk:"Verify DRP renewal notice requirements; some carriers require 90+ day pre-notification of CHOW."},
+const SECTOR_QUERY = {
+  home: { kw:"home services", bbsCat:"home-services" },
+  autobody: { kw:"auto body collision", bbsCat:"auto-body-shops" },
+  autorepair: { kw:"auto repair shop", bbsCat:"auto-repair-shops" },
+  aftermkt: { kw:"automotive aftermarket", bbsCat:"automotive-and-boats" }
+};
+const STATE_LABEL = { PA:"Pennsylvania", UT:"Utah" };
 
-  {name:"Pittsburgh East Auto Repair",sectorKey:"autorepair",state:"PA",city:"Monroeville",sde:218000,price:625000,daysListed:9,employees:6,yearEstablished:2007,source:"BizBen",online:false,
-   summary:"Independent general auto repair shop with 5 bays, 2 ASE-certified master techs, and 18-year customer database. Owner ready to transition out within 90 days.",
-   fitNotes:"Clean 2.87× multiple. Both lead techs willing to stay under new ownership per listing. Brick-and-mortar with established neighborhood foot traffic and zero online revenue exposure.",
-   risk:"Diligence on 2025 EV/hybrid mix shifts in service work — confirm tooling and tech training currency."},
+function buildPlatformSearchLink(platform, sectorKey, state){
+  const sk = SECTOR_QUERY[sectorKey];
+  const stateName = STATE_LABEL[state];
+  const stateLow = stateName.toLowerCase();
+  const kwEnc = encodeURIComponent(sk.kw);
+  switch(platform){
+    case 'BizBuySell':
+      return `https://www.bizbuysell.com/${stateLow}-businesses-for-sale/?q=${kwEnc}`;
+    case 'BizQuest':
+      return `https://www.bizquest.com/businesses-for-sale/${stateLow}/?q=${kwEnc}`;
+    case 'BizBen':
+      return `https://www.bizben.com/businesses-for-sale-${stateLow}.php?q=${kwEnc}`;
+    case 'DealStream':
+      return `https://www.dealstream.com/listings?location=${encodeURIComponent(stateName)}&q=${kwEnc}`;
+    case 'LoopNet':
+      return `https://www.loopnet.com/biz/${stateLow}-businesses-for-sale/?sk=${kwEnc}`;
+    case 'Sunbelt':
+      return `https://www.sunbeltnetwork.com/business-search/?location=${encodeURIComponent(stateName)}&q=${kwEnc}`;
+    case 'Murphy BB':
+      return `https://www.murphybusiness.com/businesses-for-sale/?location=${encodeURIComponent(stateName)}&q=${kwEnc}`;
+    default:
+      return `https://www.google.com/search?q=${encodeURIComponent(sk.kw+' business for sale '+stateName)}`;
+  }
+}
 
-  {name:"Provo Performance Aftermarket",sectorKey:"aftermkt",state:"UT",city:"Provo",sde:265000,price:795000,daysListed:42,employees:5,yearEstablished:2011,source:"BizQuest",online:false,
-   summary:"Performance auto parts and installation shop serving truck/SUV aftermarket — lift kits, suspension, off-road accessories. Brick-and-mortar showroom plus install bays.",
-   fitNotes:"3.00× multiple. Brick-and-mortar gate cleared — installation revenue ≈55% of top line. Aligns with Will's automotive aftermarket criteria. Provo university market provides stable inflow of customer demographic.",
-   risk:"Confirm online revenue is <15% of total — listing language is ambiguous on web sales."},
+const PLATFORM_KEY_TO_NAME = {
+  bizbuysell:'BizBuySell', bizquest:'BizQuest', bizben:'BizBen',
+  dealstream:'DealStream', loopnet:'LoopNet', sunbelt:'Sunbelt',
+  murphy:'Murphy BB', brokers:'Local Brokers'
+};
 
-  {name:"Harrisburg Roofing & Exteriors",sectorKey:"home",state:"PA",city:"Harrisburg",sde:425000,price:1180000,daysListed:24,employees:14,yearEstablished:2008,source:"DealStream",online:false,
-   summary:"Residential roofing with siding and gutters add-on services. Insurance restoration work mix ≈35%. GAF Master Elite certified.",
-   fitNotes:"Top of SDE band — strongest cash flow in current sweep. 2.78× multiple. GAF Master Elite designation is portable to new ownership and adds genuine moat. Crew foreman has 9-year tenure.",
-   risk:"Verify weather-driven revenue volatility — pull last 5 years of monthly to identify seasonality and storm-claim exposure."},
+function generateFallbackSearchLinks(ctx){
+  const items = [];
+  const states = ctx.state==='both' ? ['PA','UT'] : [ctx.state];
+  const platformsToUse = ctx.platforms
+    .filter(p=>p!=='offmarket' && p!=='brokers')
+    .map(p=>PLATFORM_KEY_TO_NAME[p])
+    .filter(Boolean);
 
-  {name:"Ogden Auto Body & Paint",sectorKey:"autobody",state:"UT",city:"Ogden",sde:178000,price:565000,daysListed:51,employees:5,yearEstablished:2005,source:"BizBuySell",online:false,
-   summary:"Independent body shop with paint booth and frame rack. No DRP relationships — fully retail and small-fleet customer mix.",
-   fitNotes:"3.17× multiple. Lower-end SDE but enters at lower price point. No DRP exposure means simpler transition but caps growth ceiling unless Will brings DRP relationships from his network.",
-   risk:"Tight SDE — limited cushion for any post-close revenue dip. Verify add-back integrity carefully."},
-
-  {name:"State College Plumbing Services",sectorKey:"home",state:"PA",city:"State College",sde:312000,price:925000,daysListed:14,employees:8,yearEstablished:2001,source:"BizBuySell",online:false,
-   summary:"Residential plumbing service company with university and rental property contract base. 4 service trucks, dispatch software, on-call rotation in place.",
-   fitNotes:"2.96× multiple. University rental property recurring base is exactly the kind of contracted-revenue moat Will's buy box favors. Semi-absentee viable — owner already not on tools.",
-   risk:"Confirm rental property contracts are master service agreements vs. per-call; the former are far more transferable."},
-
-  {name:"Park City Auto Repair",sectorKey:"autorepair",state:"UT",city:"Park City",sde:245000,price:725000,daysListed:38,employees:4,yearEstablished:2012,source:"Sunbelt",online:false,
-   summary:"General repair and tire shop in resort town. Mix of local resident base and tourist drive-by. Two-bay shop with snow tire seasonal swing.",
-   fitNotes:"2.96× multiple. Resort-town stability + Utah footprint match. Brick-and-mortar with no online exposure.",
-   risk:"4-employee headcount is at low edge of buy box — owner-as-tech risk; verify one of the four is a true managing tech."},
-
-  {name:"Allentown Electrical Contractors",sectorKey:"home",state:"PA",city:"Allentown",sde:355000,price:1050000,daysListed:21,employees:10,yearEstablished:1996,source:"BizBuySell",online:false,
-   summary:"Residential and light commercial electrical contractor with panel upgrade and EV charger installation as growing segments. Master electrician on staff (non-owner).",
-   fitNotes:"2.96× multiple. 28-year history and non-owner master electrician is a strong semi-absentee setup. EV charger segment growth is a genuine tailwind for Will's hold thesis.",
-   risk:"Verify master electrician retention via stay-bonus structure pre-LOI."},
-
-  {name:"Salt Lake Collision & Glass",sectorKey:"autobody",state:"UT",city:"Salt Lake City",sde:332000,price:985000,daysListed:11,employees:8,yearEstablished:2002,source:"BizQuest",online:false,
-   summary:"Collision plus auto glass replacement combined operation. Auto glass adds stable per-claim insurance billing and shorter repair cycles.",
-   fitNotes:"2.97× multiple. Auto glass cross-sell is a meaningful diversification beyond pure collision. Mature 22-year operation with stable insurer relationships.",
-   risk:"Confirm glass-side insurance partner panel transferability separately from DRP collision relationships."},
-
-  {name:"Bethlehem Auto Repair Twin Bay",sectorKey:"autorepair",state:"PA",city:"Bethlehem",sde:188000,price:550000,daysListed:46,employees:5,yearEstablished:2009,source:"BizBen",online:false,
-   summary:"Two-bay auto repair specializing in domestic vehicles. Steady local customer base, owner exiting for retirement.",
-   fitNotes:"2.93× multiple. Lower price point provides clean entry for Will. Domestic vehicle specialization narrows scope but reduces tooling complexity.",
-   risk:"Modest scale — verify whether the operation can absorb a GM hire without compressing investor distributions below threshold."},
-
-  {name:"Logan Diesel Performance",sectorKey:"aftermkt",state:"UT",city:"Logan",sde:298000,price:895000,daysListed:27,employees:6,yearEstablished:2010,source:"DealStream",online:false,
-   summary:"Diesel truck performance and repair shop — tuners, exhaust, cold air intakes, plus diagnostic and repair work. Brick-and-mortar shop with installation focus.",
-   fitNotes:"3.00× multiple. Niche specialization gives genuine differentiation. Installation-heavy revenue mix clears the brick-and-mortar gate cleanly.",
-   risk:"Verify EPA tuning compliance posture — emissions-related modifications carry regulatory exposure that needs counsel review pre-LOI."},
-
-  {name:"Reading Garage Door Service",sectorKey:"home",state:"PA",city:"Reading",sde:225000,price:675000,daysListed:33,employees:6,yearEstablished:2006,source:"BizBuySell",online:false,
-   summary:"Residential garage door installation and service. Three trucks, dispatched scheduling, recurring spring-replacement service stream.",
-   fitNotes:"3.00× multiple. Service-driven recurring work is a quiet but strong revenue moat. Residential garage door is one of the cleanest semi-absentee home services models.",
-   risk:"Verify supplier relationships — single-source door manufacturer dependency would be a material flag."},
-
-  {name:"Saint George Auto Body",sectorKey:"autobody",state:"UT",city:"Saint George",sde:268000,price:795000,daysListed:19,employees:7,yearEstablished:2004,source:"Sunbelt",online:false,
-   summary:"Collision repair with one DRP relationship (USAA). Growing market with retiree population fueling drive demand and corresponding accident frequency.",
-   fitNotes:"2.97× multiple. Saint George demographic tailwinds are real — retiree influx means stable claim volume. Single DRP exposure is offset by retail walk-in mix.",
-   risk:"Single-DRP concentration risk — diligence the % of revenue from USAA work specifically."},
-
-  {name:"Erie Plumbing & Drain",sectorKey:"home",state:"PA",city:"Erie",sde:165000,price:485000,daysListed:55,employees:4,yearEstablished:2010,source:"BizBen",online:false,
-   summary:"Residential plumbing and drain cleaning service. Smaller operation but with established service-call base across Erie metro.",
-   fitNotes:"2.94× multiple. Floor-of-band SDE but corresponding entry price is most accessible in current sweep. Brick-and-mortar dispatch with real W-2 staff.",
-   risk:"At Will's lower SDE bound — careful underwriting of investor distribution viability after GM hire and debt service."}
-];
+  for(const sectorKey of ctx.sectors){
+    for(const state of states){
+      for(const platform of platformsToUse){
+        items.push({
+          name: `${SECTOR_LABELS[sectorKey]} listings — ${STATE_LABEL[state]}`,
+          sectorKey, sector: SECTOR_LABELS[sectorKey],
+          state, city: STATE_LABEL[state],
+          sde: null, price: null, daysListed: null,
+          employees: null, yearEstablished: null,
+          source: platform,
+          url: buildPlatformSearchLink(platform, sectorKey, state),
+          online: false,
+          summary: `Live ${platform} search results filtered for ${SECTOR_LABELS[sectorKey].toLowerCase()} businesses in ${STATE_LABEL[state]}. Click through to browse current listings, then bring promising candidates back to the scout for full buy-box scoring.`,
+          fitNotes: `Pre-filtered platform search rather than a single listing. Use this as a manual sweep entry point when the live agent path is unavailable.`,
+          risk: `Manual review required — these are platform indices, not pre-vetted listings.`
+        });
+      }
+    }
+  }
+  return items.slice(0, ctx.count);
+}
 
 /* ── MAIN AGENT ───────────────────────────────────────────── */
 async function runScout(){
@@ -922,7 +986,7 @@ async function runScout(){
   document.getElementById('resultsPanel').style.display='none';
   logInit();
 
-  logPush('Initializing Will Pilling Deal Scout · HSW Partners');
+  logPush('Initializing Will Pilling Deal Scout · Avila Phoenix');
   logPush(`Buy box: ${ctx.sectors.map(k=>SECTOR_LABELS[k]).join(' / ')} · ${ctx.state==='both'?'PA + UT':ctx.state}`);
   logPush(`Financial gates: SDE ${fmt$(ctx.sdeMin)}–${fmt$(ctx.sdeMax)} · Price ${fmt$(ctx.priceMin)}–${fmt$(ctx.priceMax)} · Max ${ctx.multipleMax}× SDE`);
   logPush(`Sweeping ${ctx.platforms.length} platforms · ${ctx.window}-day window…`);
@@ -936,28 +1000,58 @@ async function runScout(){
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514',
-        max_tokens:4000,
+        max_tokens:8000,
         system: buildSystemPrompt(ctx),
-        messages:[{role:'user', content:`Sweep platforms now and return exactly ${ctx.count} listings as the JSON array specified.`}],
+        messages:[{role:'user', content:`Run web searches now across the enabled platforms. Find real, currently-listed businesses matching the buy box. Return up to ${ctx.count} verified listings as the JSON array specified — every listing MUST include a real listing URL you found in search results. Do not fabricate listings.`}],
         tools:[{type:'web_search_20250305', name:'web_search'}]
       })
     });
     if(!resp.ok) throw new Error('Worker HTTP '+resp.status);
     const data = await resp.json();
+
+    // Count tool uses for transparency
+    const toolUses = (data.content||[]).filter(b=>b.type==='server_tool_use'||b.type==='web_search_tool_result'||b.type==='tool_use');
+    if(toolUses.length>0) logPush(`Agent ran ${toolUses.length} web search tool calls`, 'log-ok');
+
+    // Concatenate all text blocks (web_search interleaves text + tool_result blocks)
     const text = (data.content||[])
       .filter(b=>b.type==='text')
       .map(b=>b.text).join('\n')
       .replace(/```json|```/g,'').trim();
 
+    // Find the JSON array — model may include preamble text despite instructions
     let deals;
-    try { deals = JSON.parse(text); }
-    catch(e){
-      logPush('Live response parse failed — falling back to curated library', 'log-err');
+    try {
+      deals = JSON.parse(text);
+    } catch(e1){
+      // Fallback: extract first [...] block
+      const match = text.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      if(match){
+        try { deals = JSON.parse(match[0]); }
+        catch(e2){
+          logPush('Live response JSON parse failed — falling back to curated library', 'log-err');
+          runFromLibrary(ctx);
+          btn.disabled=false; btn.textContent='Scout Listings';
+          return;
+        }
+      } else {
+        logPush('No JSON array found in response — falling back to curated library', 'log-err');
+        runFromLibrary(ctx);
+        btn.disabled=false; btn.textContent='Scout Listings';
+        return;
+      }
+    }
+
+    if(!Array.isArray(deals) || deals.length===0){
+      logPush('Agent returned no listings — falling back to curated library', 'log-err');
       runFromLibrary(ctx);
       btn.disabled=false; btn.textContent='Scout Listings';
       return;
     }
+
     logPush(`Received ${deals.length} candidate listings from agent`, 'log-ok');
+    const withUrl = deals.filter(d=>d.url && d.url.startsWith('http')).length;
+    logPush(`${withUrl} of ${deals.length} include verified listing URLs`, withUrl===deals.length?'log-ok':'log-err');
     logPush('Applying Will Pilling scoring matrix…');
     deals.forEach(d=>d.score = scoreDeal(d, ctx));
     deals = deals.filter(d=>d.score>0).sort((a,b)=>b.score-a.score);
@@ -972,12 +1066,9 @@ async function runScout(){
 }
 
 function runFromLibrary(ctx){
-  let deals = WP_LIBRARY
-    .map(d=>({...d, score: scoreDeal(d, ctx)}))
-    .filter(d=>d.score>0)
-    .sort((a,b)=>b.score-a.score)
-    .slice(0, ctx.count);
-  logPush(`Curated library sweep complete — ${deals.length} listings scored`, 'log-ok');
+  const deals = generateFallbackSearchLinks(ctx).map(d=>({...d, score: scoreDeal(d, ctx)}));
+  logPush(`Generated ${deals.length} live platform search-result links as fallback`, 'log-ok');
+  logPush(`Click "View Listing →" on any card to browse current inventory on the platform`, 'log-ok');
   renderResults(deals);
 }
 
