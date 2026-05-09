@@ -992,14 +992,14 @@ async function runScout(){
   logPush(`Sweeping ${ctx.platforms.length} platforms · ${ctx.window}-day window…`);
 
   // Live API path — routed through Cloudflare Worker proxy
-  const WORKER_URL = 'https://wp-scout.brian-wyss.workers.dev';
+  const WORKER_URL = 'https://wp-scout.wyssbk.workers.dev';
   try {
-    logPush('Routing through Cloudflare Worker → claude-sonnet-4-20250514 with web search tool…');
+    logPush('Routing through Cloudflare Worker → claude-opus-4-7 with web search tool…');
     const resp = await fetch(WORKER_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-opus-4-7',
         max_tokens:8000,
         system: buildSystemPrompt(ctx),
         messages:[{role:'user', content:`Run web searches now across the enabled platforms. Find real, currently-listed businesses matching the buy box. Return up to ${ctx.count} verified listings as the JSON array specified — every listing MUST include a real listing URL you found in search results. Do not fabricate listings.`}],
