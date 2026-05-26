@@ -417,6 +417,45 @@
     cursor:not-allowed;
     pointer-events:none;
   }
+  .deal-links{
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  }
+  .search-listing{
+    display:inline-block;
+    background:transparent;
+    color:var(--navy);
+    text-decoration:none;
+    padding:8px 14px;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-weight:600;
+    border:1px solid var(--gray-line);
+    transition:all 0.18s;
+  }
+  .search-listing:hover{
+    border-color:var(--gold);
+    background:rgba(197,165,114,0.1);
+  }
+  .deal-statusrow{
+    margin-top:10px;
+  }
+  .listing-status{
+    display:inline-block;
+    font-size:10px;
+    letter-spacing:0.8px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:2px;
+  }
+  .listing-status.active{
+    color:var(--green);
+    background:rgba(45,106,79,0.1);
+  }
+  .listing-status.uncertain{
+    color:var(--amber);
+    background:rgba(183,121,31,0.1);
+  }
 
   .log{
     background:var(--navy-deep);
@@ -768,9 +807,23 @@ function renderResults(deals){
     const v = verdictFor(d.score);
     const m = (d.price && d.sde && d.sde>0) ? (d.price/d.sde).toFixed(2)+'×' : '—';
     const hasUrl = d.url && d.url.startsWith('http');
+    const hasSearch = d.searchUrl && d.searchUrl.startsWith('http');
+
+    // Primary listing link
     const urlButton = hasUrl
       ? `<a class="view-listing" href="${d.url}" target="_blank" rel="noopener noreferrer">View Listing →</a>`
       : `<span class="view-listing disabled" title="No listing URL provided">No URL Available</span>`;
+
+    // Backup search link — used if direct listing is dead
+    const searchButton = hasSearch
+      ? `<a class="search-listing" href="${d.searchUrl}" target="_blank" rel="noopener noreferrer" title="If the listing link is dead, search ${d.source||'the platform'} for this business">⌕ Search ${d.source||'Platform'}</a>`
+      : '';
+
+    // Listing status badge
+    const statusBadge = (d.listingStatus === 'active')
+      ? `<span class="listing-status active">● Verified Active</span>`
+      : `<span class="listing-status uncertain">● Status Unconfirmed — link may have expired</span>`;
+
     return `<div class="deal ${v.key}">
       <div class="deal-body">
         <div class="deal-head">
@@ -788,9 +841,10 @@ function renderResults(deals){
         <div class="deal-summary">${d.summary || d.rationale || ''}</div>
         <div class="deal-fit"><b>Fit Notes — </b>${d.fitNotes || d.rationale || 'Aligns with Will Pilling buy box parameters.'}</div>
         ${d.risk ? `<div class="deal-risk">⚠ ${d.risk}</div>`:''}
+        <div class="deal-statusrow">${statusBadge}</div>
         <div class="deal-footer-row">
           <div class="deal-source">Source: ${d.source||'Listing Platform'}</div>
-          ${urlButton}
+          <div class="deal-links">${urlButton}${searchButton}</div>
         </div>
       </div>
       <div class="deal-side">
@@ -818,7 +872,7 @@ function exportCSV(){
     ['Deal Count', STATE.results.length],
     ['']
   ];
-  const headers = ['Fit Score','Verdict','Business Name','Sector','City','State','Year Est.','Employees','Asking','SDE','Multiple','Days Listed','Listing URL','Summary','Fit Notes','Risk','Source'];
+  const headers = ['Fit Score','Verdict','Business Name','Sector','City','State','Year Est.','Employees','Asking','SDE','Multiple','Days Listed','Listing Status','Listing URL','Backup Search URL','Summary','Fit Notes','Risk','Source'];
   const esc = v => {
     if(v==null) return '';
     const s = String(v);
@@ -831,7 +885,9 @@ function exportCSV(){
     d.yearEstablished, d.employees, d.price, d.sde,
     (d.price && d.sde) ? (d.price/d.sde).toFixed(2) : '',
     d.daysListed,
+    d.listingStatus==='active' ? 'Verified Active' : 'Unconfirmed',
     d.url||'',
+    d.searchUrl||'',
     d.summary||d.rationale||'', d.fitNotes||'', d.risk||'', d.source||''
   ].map(esc).join(','));
 
@@ -858,6 +914,8 @@ REQUIRED SEARCH STRATEGY:
 2. Sample queries: "auto repair business for sale Pennsylvania bizbuysell", "HVAC business for sale Utah bizquest", "collision shop for sale Pennsylvania", "plumbing business for sale Utah", etc.
 3. Cover each enabled platform: ${ctx.platforms.join(', ')}
 4. ONLY include listings whose URL you actually found in search results
+5. VERIFICATION STEP — REQUIRED: For each candidate listing, look carefully at the search result snippet. Only include a listing if the search result clearly indicates the listing is still ACTIVE (not "sold", not "under contract", not "listing removed", not "expired"). If a search snippet says the business is sold or the listing is no longer available, DROP that listing entirely. Prefer listings that appear most recently indexed and most clearly active.
+6. FRESHNESS: Strongly prefer listings posted or updated within the last 30 days. Newer listings are far less likely to be dead links.
 
 WILL PILLING'S BUY BOX (HARD GATES):
 - SDE: $${ctx.sdeMin.toLocaleString()} – $${ctx.sdeMax.toLocaleString()}
@@ -888,13 +946,15 @@ Return up to ${ctx.count} REAL listings sorted by buy-box fit. RESPOND ONLY with
   "yearEstablished":2008,
   "source":"Platform name (BizBuySell, BizQuest, etc.)",
   "url":"FULL https:// URL of the actual listing — REQUIRED, must be a real URL from search results",
+  "searchUrl":"A backup search URL on the SAME platform that queries the platform for this business by name or sector+location — used as a fallback if the direct listing link is dead",
+  "listingStatus":"active|uncertain — set to 'active' only if the search snippet clearly shows the listing is live; 'uncertain' if you could not confirm",
   "online":false,
   "summary":"2-3 sentence operating description from the actual listing",
   "fitNotes":"How this matches Will's buy box — sector, multiple discipline, semi-absentee viability, real estate posture",
   "risk":"One key risk or diligence flag, if any (else empty string)"
 }]
 
-CRITICAL: Every listing MUST include a real, working "url" field pointing to the actual listing page. If you cannot find a URL for a listing, DO NOT include it. Better to return 4 verified deals than 12 fabricated ones. If financial details aren't disclosed in the listing, use null and note it in fitNotes.
+CRITICAL: Every listing MUST include a real, working "url" field pointing to the actual listing page. Every listing MUST also include a "searchUrl" backup. If you cannot find a URL for a listing, DO NOT include it. Better to return 4 verified deals than 12 fabricated ones. If financial details aren't disclosed in the listing, use null and note it in fitNotes. Set "listingStatus" honestly — only "active" when the search result genuinely confirms the listing is live.
 
 NEVER reference Acquisition Network Investors. NEVER reference HSW Partners. NEVER use the term "retrade." Maintain Avila Phoenix institutional voice.`;
 }
@@ -956,6 +1016,7 @@ function generateFallbackSearchLinks(ctx){
   for(const sectorKey of ctx.sectors){
     for(const state of states){
       for(const platform of platformsToUse){
+        const link = buildPlatformSearchLink(platform, sectorKey, state);
         items.push({
           name: `${SECTOR_LABELS[sectorKey]} listings — ${STATE_LABEL[state]}`,
           sectorKey, sector: SECTOR_LABELS[sectorKey],
@@ -963,7 +1024,9 @@ function generateFallbackSearchLinks(ctx){
           sde: null, price: null, daysListed: null,
           employees: null, yearEstablished: null,
           source: platform,
-          url: buildPlatformSearchLink(platform, sectorKey, state),
+          url: link,
+          searchUrl: link,
+          listingStatus: 'uncertain',
           online: false,
           summary: `Live ${platform} search results filtered for ${SECTOR_LABELS[sectorKey].toLowerCase()} businesses in ${STATE_LABEL[state]}. Click through to browse current listings, then bring promising candidates back to the scout for full buy-box scoring.`,
           fitNotes: `Pre-filtered platform search rather than a single listing. Use this as a manual sweep entry point when the live agent path is unavailable.`,
@@ -1051,7 +1114,9 @@ async function runScout(){
 
     logPush(`Received ${deals.length} candidate listings from agent`, 'log-ok');
     const withUrl = deals.filter(d=>d.url && d.url.startsWith('http')).length;
-    logPush(`${withUrl} of ${deals.length} include verified listing URLs`, withUrl===deals.length?'log-ok':'log-err');
+    logPush(`${withUrl} of ${deals.length} include listing URLs`, withUrl===deals.length?'log-ok':'log-err');
+    const activeCount = deals.filter(d=>d.listingStatus==='active').length;
+    logPush(`${activeCount} confirmed active · ${deals.length-activeCount} status unconfirmed`, activeCount>0?'log-ok':'log-err');
     logPush('Applying Will Pilling scoring matrix…');
     deals.forEach(d=>d.score = scoreDeal(d, ctx));
     deals = deals.filter(d=>d.score>0).sort((a,b)=>b.score-a.score);
