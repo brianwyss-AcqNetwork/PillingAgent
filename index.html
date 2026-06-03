@@ -1057,19 +1057,27 @@ async function runScout(){
   // Live API path — routed through Cloudflare Worker proxy
   const WORKER_URL = 'https://wp-scout.wyssbk.workers.dev';
   try {
-    logPush('Routing through Cloudflare Worker → claude-opus-4-7 with web search tool…');
+    logPush('Routing through Cloudflare Worker → claude-sonnet-4-5 with web search tool…');
     const resp = await fetch(WORKER_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-opus-4-7',
+        model:'claude-sonnet-4-5-20251015',
         max_tokens:8000,
         system: buildSystemPrompt(ctx),
         messages:[{role:'user', content:`Run web searches now across the enabled platforms. Find real, currently-listed businesses matching the buy box. Return up to ${ctx.count} verified listings as the JSON array specified — every listing MUST include a real listing URL you found in search results. Do not fabricate listings.`}],
         tools:[{type:'web_search_20250305', name:'web_search'}]
       })
     });
-    if(!resp.ok) throw new Error('Worker HTTP '+resp.status);
+    if(!resp.ok){
+      let errDetail = `Worker HTTP ${resp.status}`;
+      try {
+        const errBody = await resp.json();
+        if(errBody.error?.message) errDetail += ` — ${errBody.error.message}`;
+        else if(errBody.error) errDetail += ` — ${JSON.stringify(errBody.error)}`;
+      } catch(_){}
+      throw new Error(errDetail);
+    }
     const data = await resp.json();
 
     // Count tool uses for transparency
